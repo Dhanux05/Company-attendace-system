@@ -5,14 +5,14 @@ import { attendanceService, leaveService } from "../../services/api";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, CartesianGrid, Legend } from "recharts";
 import "../intern/Pages.css";
 
-const COLORS = ["#10b981", "#f59e0b", "#ef4444", "#6366f1", "#8b5cf6"];
-const AXIS_TICK = { fontSize: 11, fill: "#5f6773" };
+const COLORS = ["#10b981", "#f59e0b", "#ef4444", "#3b82f6", "#4fae8d"];
+const AXIS_TICK = { fontSize: 11, fill: "var(--text-soft)" };
 const TOOLTIP_STYLE = {
-  background: "#ffffff",
-  border: "1px solid #d7d0c3",
+  background: "rgba(20, 26, 43, 0.95)",
+  border: "1px solid var(--line-strong)",
   borderRadius: "8px",
-  color: "#23272f",
-  boxShadow: "0 8px 18px rgba(47, 52, 63, 0.12)",
+  color: "var(--text-main)",
+  boxShadow: "0 16px 34px rgba(6, 10, 20, 0.5)",
 };
 
 const AnalyticsDashboard = () => {
@@ -68,11 +68,11 @@ const AnalyticsDashboard = () => {
           <h2 className="analytics-section-title">Daily Attendance Trend</h2>
           <ResponsiveContainer width="100%" height={240}>
             <BarChart data={analytics.daily}>
-              <CartesianGrid strokeDasharray="2 4" stroke="#d7d0c3" />
+              <CartesianGrid strokeDasharray="2 4" stroke="var(--line)" />
               <XAxis dataKey="date" tick={AXIS_TICK} />
               <YAxis tick={AXIS_TICK} />
               <Tooltip contentStyle={TOOLTIP_STYLE} />
-              <Legend wrapperStyle={{ fontSize: 12, color: "#2f343f" }} />
+              <Legend wrapperStyle={{ fontSize: 12, color: "var(--text-main)" }} />
               <Bar dataKey="present" fill="#10b981" name="Present" radius={[8,8,0,0]} />
               <Bar dataKey="late" fill="#f59e0b" name="Late" radius={[8,8,0,0]} />
             </BarChart>
@@ -111,9 +111,9 @@ const AnalyticsDashboard = () => {
             {leaveData.map((l, i) => (
               <div key={l.name} style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <div style={{ width: 12, height: 12, borderRadius: "50%", background: COLORS[i] }} />
-                <span style={{ flex: 1, color: "#4b5565", fontSize: 14, fontWeight: 600 }}>{l.name}</span>
-                <span style={{ fontWeight: 700, color: "#1f2937" }}>{l.value}</span>
-                <span style={{ color: "#5f6773", fontSize: 12 }}>
+                <span style={{ flex: 1, color: "var(--text-soft)", fontSize: 14, fontWeight: 600 }}>{l.name}</span>
+                <span style={{ fontWeight: 700, color: "var(--text-main)" }}>{l.value}</span>
+                <span style={{ color: "var(--text-soft)", fontSize: 12 }}>
                   {leaveStats?.total ? `${Math.round(l.value / leaveStats.total * 100)}%` : "0%"}
                 </span>
               </div>
@@ -126,3 +126,6 @@ const AnalyticsDashboard = () => {
 };
 
 export default AnalyticsDashboard;
+
+
+

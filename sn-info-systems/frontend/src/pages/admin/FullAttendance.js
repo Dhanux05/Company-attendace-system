@@ -41,7 +41,7 @@ const FullAttendance = () => {
       <div className="filter-bar">
         <label>Date:</label>
         <input type="date" value={date} onChange={e => setDate(e.target.value)} />
-        <span style={{ color: "#64748b", fontSize: 13 }}>{records.length} records</span>
+        <span style={{ color: "var(--text-soft)", fontSize: 13 }}>{records.length} records</span>
       </div>
       <div className="stats-grid" style={{ marginBottom: 20 }}>
         {Object.entries(stats).map(([k, v]) => (
@@ -61,7 +61,7 @@ const FullAttendance = () => {
               <tbody>
                 {records.map(r => (
                   <tr key={r._id}>
-                    <td style={{ color: "#23272f", fontWeight: 700 }}>{r.user?.name}</td>
+                    <td style={{ color: "var(--text-main)", fontWeight: 700 }}>{r.user?.name}</td>
                     <td>{r.user?.email}</td>
                     <td><Badge status={r.user?.role} /></td>
                     <td>{fmtTime(r.loginTime)}</td>
@@ -81,3 +81,4 @@ const FullAttendance = () => {
 };
 
 export default FullAttendance;
+

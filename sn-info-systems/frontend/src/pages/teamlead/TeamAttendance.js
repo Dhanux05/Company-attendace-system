@@ -56,7 +56,7 @@ const TeamAttendance = () => {
               <tbody>
                 {records.map(r => (
                   <tr key={r._id}>
-                    <td style={{ color: "#23272f", fontWeight: 700 }}>{r.user?.name}</td>
+                    <td style={{ color: "var(--text-main)", fontWeight: 700 }}>{r.user?.name}</td>
                     <td>{r.user?.email}</td>
                     <td>{fmtTime(r.loginTime)}</td>
                     <td>{fmtTime(r.logoutTime)}</td>
@@ -74,3 +74,4 @@ const TeamAttendance = () => {
 };
 
 export default TeamAttendance;
+

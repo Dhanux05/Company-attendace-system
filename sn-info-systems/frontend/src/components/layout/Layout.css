@@ -13,18 +13,12 @@
   padding: 26px;
   overflow-y: auto;
   overflow-x: hidden;
+  border-top-left-radius: 14px;
+  border-left: 1px solid rgba(255, 255, 255, 0.14);
   background:
-    radial-gradient(840px 300px at 18% -8%, rgba(160, 123, 85, 0.22) 0%, transparent 66%),
-    radial-gradient(620px 240px at 84% 5%, rgba(130, 101, 71, 0.16) 0%, transparent 64%),
-    radial-gradient(520px 220px at 48% 100%, rgba(255, 250, 242, 0.42) 0%, transparent 72%),
-    repeating-linear-gradient(
-      -45deg,
-      rgba(255, 255, 255, 0.24) 0px,
-      rgba(255, 255, 255, 0.24) 2px,
-      rgba(255, 255, 255, 0) 2px,
-      rgba(255, 255, 255, 0) 15px
-    ),
-    linear-gradient(180deg, #fbf7ef 0%, #f3ede1 56%, #ede3d4 100%);
+    radial-gradient(360px 220px at 20% 0%, rgba(94, 151, 255, 0.26) 0%, transparent 62%),
+    radial-gradient(420px 280px at 85% 35%, rgba(43, 103, 224, 0.2) 0%, transparent 70%),
+    linear-gradient(180deg, #071535 0%, #06112a 52%, #040c1f 100%);
 }
 
 .sidebar-backdrop {
@@ -40,7 +34,8 @@
     position: fixed;
     inset: 0;
     border: none;
-    background: rgba(23, 28, 36, 0.45);
+    background: rgba(5, 8, 15, 0.72);
     z-index: 95;
   }
 }
+

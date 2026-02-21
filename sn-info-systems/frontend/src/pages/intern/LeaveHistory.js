@@ -37,7 +37,7 @@ const LeaveHistory = () => {
               <tbody>
                 {leaves.map(l => (
                   <tr key={l._id}>
-                    <td style={{ color: "#2f343f", fontWeight: 700 }}>{l.leaveType}</td>
+                    <td style={{ color: "var(--text-main)", fontWeight: 700 }}>{l.leaveType}</td>
                     <td>{fmtDate(l.startDate)}</td>
                     <td>{fmtDate(l.endDate)}</td>
                     <td>{l.totalDays}</td>
@@ -56,3 +56,4 @@ const LeaveHistory = () => {
 };
 
 export default LeaveHistory;
+

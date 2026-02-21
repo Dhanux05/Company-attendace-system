@@ -384,7 +384,7 @@ const MarkAttendance = () => {
       <div className="attendance-grid">
         <div className="att-section">
           <h3>Step 1: Location</h3>
-          <p style={{ marginBottom: 10, color: "#5f6773", fontSize: 13 }}>
+          <p style={{ marginBottom: 10, color: "var(--text-soft)", fontSize: 13 }}>
             Company Address: {OFFICE_ADDRESS}
           </p>
           <button className="btn btn-outline" onClick={getLocation}>
@@ -514,3 +514,4 @@ const MarkAttendance = () => {
 };
 
 export default MarkAttendance;
+

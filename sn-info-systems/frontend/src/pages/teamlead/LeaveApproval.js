@@ -46,7 +46,7 @@ const LeaveApproval = () => {
         <p>Review and approve/reject leave requests</p>
       </div>
 
-      <h2 style={{ fontSize: 15, fontWeight: 700, color: "#2f343f", marginBottom: 12 }}>
+      <h2 style={{ fontSize: 15, fontWeight: 700, color: "var(--text-main)", marginBottom: 12 }}>
         Pending Requests ({pending.length})
       </h2>
       {pending.length === 0 && <div className="page-card"><div className="empty-state">No pending requests</div></div>}
@@ -54,16 +54,16 @@ const LeaveApproval = () => {
         <div key={l._id} className="page-card" style={{ marginBottom: 12 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
             <div>
-              <div style={{ fontWeight: 700, color: "#23272f", marginBottom: 4 }}>{l.user?.name}</div>
-              <div style={{ fontSize: 13, color: "#94a3b8" }}>{l.leaveType} · {fmtDate(l.startDate)} – {fmtDate(l.endDate)} ({l.totalDays} days)</div>
-              <div style={{ fontSize: 13, color: "#64748b", marginTop: 6 }}>{l.reason}</div>
+              <div style={{ fontWeight: 700, color: "var(--text-main)", marginBottom: 4 }}>{l.user?.name}</div>
+              <div style={{ fontSize: 13, color: "var(--text-soft)" }}>{l.leaveType} · {fmtDate(l.startDate)} – {fmtDate(l.endDate)} ({l.totalDays} days)</div>
+              <div style={{ fontSize: 13, color: "var(--text-soft)", marginTop: 6 }}>{l.reason}</div>
             </div>
             <Badge status={l.status} />
           </div>
           <div style={{ marginTop: 12, display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
             <input
               placeholder="Optional review note..."
-              style={{ flex: 1, background: "#ffffff", border: "1px solid #cfc4b1", borderRadius: 8, padding: "8px 10px", color: "#23272f", fontSize: 13, minWidth: 200 }}
+              style={{ flex: 1, background: "#ffffff", border: "1px solid #cfc4b1", borderRadius: 8, padding: "8px 10px", color: "var(--text-main)", fontSize: 13, minWidth: 200 }}
               value={note}
               onChange={e => setNote(e.target.value)}
             />
@@ -73,7 +73,7 @@ const LeaveApproval = () => {
         </div>
       ))}
 
-      <h2 style={{ fontSize: 15, fontWeight: 700, color: "#2f343f", margin: "20px 0 12px" }}>
+      <h2 style={{ fontSize: 15, fontWeight: 700, color: "var(--text-main)", margin: "20px 0 12px" }}>
         Reviewed ({reviewed.length})
       </h2>
       {reviewed.length > 0 && (
@@ -84,7 +84,7 @@ const LeaveApproval = () => {
               <tbody>
                 {reviewed.map(l => (
                   <tr key={l._id}>
-                    <td style={{ color: "#23272f", fontWeight: 700 }}>{l.user?.name}</td>
+                    <td style={{ color: "var(--text-main)", fontWeight: 700 }}>{l.user?.name}</td>
                     <td>{l.leaveType}</td>
                     <td>{fmtDate(l.startDate)} – {fmtDate(l.endDate)}</td>
                     <td>{l.totalDays}</td>
@@ -102,3 +102,4 @@ const LeaveApproval = () => {
 };
 
 export default LeaveApproval;
+

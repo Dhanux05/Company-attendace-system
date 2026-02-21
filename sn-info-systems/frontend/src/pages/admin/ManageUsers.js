@@ -58,7 +58,7 @@ const ManageUsers = () => {
       </div>
       <div className="filter-bar">
         <input placeholder="Search by name or email..." value={search} onChange={e => setSearch(e.target.value)} style={{ minWidth: 280 }} />
-        <span style={{ color: "#64748b", fontSize: 13 }}>{filtered.length} users</span>
+        <span style={{ color: "var(--text-soft)", fontSize: 13 }}>{filtered.length} users</span>
       </div>
       <div className="page-card">
         {loading ? <div className="empty-state">Loading...</div> : (
@@ -70,17 +70,17 @@ const ManageUsers = () => {
                   <tr key={u._id}>
                     {editing === u._id ? (
                       <>
-                        <td><input value={form.name} onChange={e => setForm({...form, name: e.target.value})} style={{ background: "#ffffff", border: "1px solid #cfc4b1", borderRadius: 6, padding: "6px 10px", color: "#23272f", width: "100%" }} /></td>
-                        <td><input value={form.email} onChange={e => setForm({...form, email: e.target.value})} style={{ background: "#ffffff", border: "1px solid #cfc4b1", borderRadius: 6, padding: "6px 10px", color: "#23272f", width: "100%" }} /></td>
+                        <td><input value={form.name} onChange={e => setForm({...form, name: e.target.value})} style={{ background: "#ffffff", border: "1px solid #cfc4b1", borderRadius: 6, padding: "6px 10px", color: "var(--text-main)", width: "100%" }} /></td>
+                        <td><input value={form.email} onChange={e => setForm({...form, email: e.target.value})} style={{ background: "#ffffff", border: "1px solid #cfc4b1", borderRadius: 6, padding: "6px 10px", color: "var(--text-main)", width: "100%" }} /></td>
                         <td>
-                          <select value={form.role} onChange={e => setForm({...form, role: e.target.value})} style={{ background: "#ffffff", border: "1px solid #cfc4b1", borderRadius: 6, padding: "6px 10px", color: "#23272f" }}>
+                          <select value={form.role} onChange={e => setForm({...form, role: e.target.value})} style={{ background: "#ffffff", border: "1px solid #cfc4b1", borderRadius: 6, padding: "6px 10px", color: "var(--text-main)" }}>
                             <option value="intern">intern</option>
                             <option value="teamlead">teamlead</option>
                             <option value="admin">admin</option>
                           </select>
                         </td>
                         <td>
-                          <select value={form.team} onChange={e => setForm({...form, team: e.target.value})} style={{ background: "#ffffff", border: "1px solid #cfc4b1", borderRadius: 6, padding: "6px 10px", color: "#23272f" }}>
+                          <select value={form.team} onChange={e => setForm({...form, team: e.target.value})} style={{ background: "#ffffff", border: "1px solid #cfc4b1", borderRadius: 6, padding: "6px 10px", color: "var(--text-main)" }}>
                             <option value="">No Team</option>
                             {teams.map(t => <option key={t._id} value={t._id}>{t.name}</option>)}
                           </select>
@@ -92,7 +92,7 @@ const ManageUsers = () => {
                       </>
                     ) : (
                       <>
-                        <td style={{ color: "#23272f", fontWeight: 700 }}>{u.name}</td>
+                        <td style={{ color: "var(--text-main)", fontWeight: 700 }}>{u.name}</td>
                         <td>{u.email}</td>
                         <td><Badge status={u.role} /></td>
                         <td>{u.team?.name || "—"}</td>
@@ -117,3 +117,4 @@ const ManageUsers = () => {
 };
 
 export default ManageUsers;
+

@@ -5,14 +5,14 @@ import { attendanceService, leaveService } from "../../services/api";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import "../intern/Pages.css";
 
-const COLORS = ["#10b981", "#f59e0b", "#ef4444", "#6366f1"];
-const AXIS_TICK = { fontSize: 11, fill: "#5f6773" };
+const COLORS = ["#10b981", "#f59e0b", "#ef4444", "#3b82f6"];
+const AXIS_TICK = { fontSize: 11, fill: "var(--text-soft)" };
 const TOOLTIP_STYLE = {
-  background: "#ffffff",
-  border: "1px solid #d7d0c3",
+  background: "rgba(20, 26, 43, 0.95)",
+  border: "1px solid var(--line-strong)",
   borderRadius: "8px",
-  color: "#23272f",
-  boxShadow: "0 8px 18px rgba(47, 52, 63, 0.12)",
+  color: "var(--text-main)",
+  boxShadow: "0 16px 34px rgba(6, 10, 20, 0.5)",
 };
 
 const TeamAnalytics = () => {
@@ -85,3 +85,6 @@ const TeamAnalytics = () => {
 };
 
 export default TeamAnalytics;
+
+
+

@@ -4,8 +4,11 @@
   left: 0;
   width: 280px;
   height: 100vh;
-  background: linear-gradient(180deg, #343a45 0%, #2a3038 100%);
-  border-right: 1px solid #4f5664;
+  background:
+    radial-gradient(360px 220px at 20% 0%, rgba(94, 151, 255, 0.26) 0%, transparent 62%),
+    radial-gradient(420px 280px at 85% 35%, rgba(43, 103, 224, 0.2) 0%, transparent 70%),
+    linear-gradient(180deg, #071535 0%, #06112a 52%, #040c1f 100%);
+  border-right: 1px solid rgba(153, 180, 225, 0.22);
   display: flex;
   flex-direction: column;
   transition: width 0.3s ease, transform 0.3s ease;
@@ -22,15 +25,15 @@
   align-items: center;
   gap: 12px;
   padding: 18px 16px;
-  border-bottom: 1px solid #4f5664;
+  border-bottom: 1px solid rgba(153, 180, 225, 0.22);
 }
 
 .admin-portal-logo {
   width: 42px;
   height: 42px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #8e7354, #6d5842);
-  color: #f8f7f3;
+  background: linear-gradient(135deg, #3b82f6, #60a5fa);
+  color: #11162a;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -44,13 +47,13 @@
 }
 
 .admin-portal-title {
-  color: #f8f7f3;
+  color: #eef4ff;
   font-size: 14px;
   font-weight: 700;
 }
 
 .admin-portal-subtitle {
-  color: #b7bdc8;
+  color: #a9bbda;
   font-size: 11px;
 }
 
@@ -69,24 +72,28 @@
   gap: 12px;
   padding: 10px 12px;
   border-radius: 8px;
-  color: #d8dde5;
+  color: #ccd8ef;
   text-decoration: none;
   background: transparent;
   border: none;
   font-size: 14px;
   cursor: pointer;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
 }
 
 .admin-portal-link:hover {
-  background: #414854;
-  color: #f5f5f3;
+  background: rgba(59, 130, 246, 0.16);
+  color: #f6f9ff;
+  transform: translateX(3px);
+  box-shadow: 0 10px 22px rgba(20, 48, 94, 0.34);
 }
 
 .admin-portal-link.active {
-  background: #e8dece;
-  border: 1px solid #cdbfa9;
-  color: #2e3541;
+  background: linear-gradient(135deg, rgba(64, 125, 230, 0.52), rgba(84, 166, 255, 0.42));
+  border: 1px solid rgba(153, 199, 255, 0.62);
+  color: #f7fbff;
   font-weight: 700;
+  box-shadow: 0 10px 24px rgba(20, 48, 94, 0.34);
 }
 
 .admin-portal-link-icon {
@@ -110,7 +117,8 @@
 
 .admin-portal-footer {
   padding: 12px 8px;
-  border-top: 1px solid #4f5664;
+  border-top: 1px solid rgba(153, 180, 225, 0.22);
+  background: rgba(8, 12, 22, 0.4);
 }
 
 .admin-portal-user {
@@ -131,23 +139,24 @@
 
 .admin-portal-user-name {
   font-size: 13px;
-  color: #f8f7f3;
+  color: #eef4ff;
   font-weight: 600;
 }
 
 .admin-portal-user-role {
   font-size: 11px;
-  color: #b7bdc8;
+  color: #a9bbda;
   text-transform: capitalize;
 }
 
 .admin-portal-logout {
-  color: #f0a7a7;
+  color: #ffb7b7;
 }
 
 .admin-portal-logout:hover {
-  background: #7a3e3e33;
-  color: #ffd1d1;
+  background: rgba(255, 90, 90, 0.24);
+  color: #ffe9e9;
+  box-shadow: 0 10px 22px rgba(79, 17, 17, 0.34);
 }
 
 @media (max-width: 768px) {
@@ -165,3 +174,5 @@
     transform: translateX(-100%);
   }
 }
+
+

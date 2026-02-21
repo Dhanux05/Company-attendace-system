@@ -88,7 +88,7 @@ const AdminLeaveManagement = () => {
           onChange={(e) => setSearch(e.target.value)}
           style={{ minWidth: 300 }}
         />
-        <span style={{ color: "#64748b", fontSize: 13 }}>
+        <span style={{ color: "var(--text-soft)", fontSize: 13 }}>
           {filtered.length} requests ({pendingCount} pending)
         </span>
       </div>
@@ -119,7 +119,7 @@ const AdminLeaveManagement = () => {
 
                   return (
                     <tr key={leave._id}>
-                      <td style={{ color: "#23272f", fontWeight: 700 }}>{leave.user?.name || "-"}</td>
+                      <td style={{ color: "var(--text-main)", fontWeight: 700 }}>{leave.user?.name || "-"}</td>
                       <td>{leave.user?.email || "-"}</td>
                       <td>{leave.leaveType}</td>
                       <td>
@@ -146,7 +146,7 @@ const AdminLeaveManagement = () => {
                                 border: "1px solid #1e2140",
                                 borderRadius: 6,
                                 padding: "6px 10px",
-                                color: "#23272f",
+                                color: "var(--text-main)",
                                 fontSize: 12,
                               }}
                             />
@@ -168,7 +168,7 @@ const AdminLeaveManagement = () => {
                             </div>
                           </div>
                         ) : (
-                          <div style={{ color: "#64748b", fontSize: 12 }}>
+                          <div style={{ color: "var(--text-soft)", fontSize: 12 }}>
                             {leave.reviewNote || "Reviewed"}
                           </div>
                         )}
@@ -186,3 +186,4 @@ const AdminLeaveManagement = () => {
 };
 
 export default AdminLeaveManagement;
+

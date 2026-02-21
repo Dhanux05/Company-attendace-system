@@ -32,7 +32,7 @@ const LeaveApplication = () => {
     : 0;
 
   return (
-    <div className="page">
+    <div className="page leave-apply-page">
       <div className="sub-nav sub-nav-center">
         <NavLink to="/intern/dashboard" className={({ isActive }) => `sub-nav-link ${isActive ? "active" : ""}`}>Dashboard</NavLink>
         <NavLink to="/intern/attendance" className={({ isActive }) => `sub-nav-link ${isActive ? "active" : ""}`}>Attendance</NavLink>
@@ -45,7 +45,8 @@ const LeaveApplication = () => {
         <p>Submit your leave request for approval</p>
       </div>
       {message.text && <div className={`alert alert-${message.type}`}>{message.text}</div>}
-      <div className="page-card" style={{ maxWidth: 600 }}>
+      <div className="leave-apply-wrap">
+      <div className="page-card leave-apply-card">
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Leave Type</label>
@@ -78,10 +79,11 @@ const LeaveApplication = () => {
               style={{ resize: "vertical" }}
             />
           </div>
-          <button type="submit" className="btn-primary" style={{ width: "auto", padding: "10px 28px" }} disabled={loading}>
+          <button type="submit" className="btn-primary leave-submit-btn" disabled={loading}>
             {loading ? "Submitting..." : "Submit Leave Request"}
           </button>
         </form>
+      </div>
       </div>
     </div>
   );

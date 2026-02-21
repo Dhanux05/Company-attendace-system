@@ -121,7 +121,7 @@ const ManageTeams = () => {
 
       {showForm && (
         <div className="page-card" style={{ marginBottom: 20, maxWidth: 600 }}>
-          <h3 style={{ color: "#2f343f", marginBottom: 16 }}>New Team</h3>
+          <h3 style={{ color: "var(--text-main)", marginBottom: 16 }}>New Team</h3>
           <form onSubmit={handleCreate}>
             <div className="form-group">
               <label>Team Name</label>
@@ -170,8 +170,8 @@ const ManageTeams = () => {
             <div key={t._id} className="page-card" style={{ opacity: t.isActive === false ? 0.5 : 1 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                 <div>
-                  <h3 style={{ color: "#2f343f", fontWeight: 700, marginBottom: 4 }}>{t.name}</h3>
-                  <p style={{ fontSize: 12, color: "#6c7480" }}>{t.description || "No description"}</p>
+                  <h3 style={{ color: "var(--text-main)", fontWeight: 700, marginBottom: 4 }}>{t.name}</h3>
+                  <p style={{ fontSize: 12, color: "var(--text-soft)" }}>{t.description || "No description"}</p>
                 </div>
                 <div style={{ display: "flex", gap: 8 }}>
                   {t.isActive !== false && (
@@ -187,12 +187,12 @@ const ManageTeams = () => {
                 </div>
               </div>
 
-              <div style={{ marginTop: 12, fontSize: 13, color: "#5f6773" }}>
+              <div style={{ marginTop: 12, fontSize: 13, color: "var(--text-soft)" }}>
                 <div>
-                  Leader: <span style={{ color: "#2f343f", fontWeight: 700 }}>{t.leader?.name || "Not assigned"}</span>
+                  Leader: <span style={{ color: "var(--text-main)", fontWeight: 700 }}>{t.leader?.name || "Not assigned"}</span>
                 </div>
                 <div style={{ marginTop: 4 }}>
-                  Members: <span style={{ color: "#2f343f", fontWeight: 700 }}>{t.members?.length || 0}</span>
+                  Members: <span style={{ color: "var(--text-main)", fontWeight: 700 }}>{t.members?.length || 0}</span>
                 </div>
               </div>
 
@@ -213,7 +213,7 @@ const ManageTeams = () => {
                     </select>
                   </div>
 
-                  <div style={{ fontSize: 12, fontWeight: 700, color: "#5f6773", marginBottom: 8 }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "var(--text-soft)", marginBottom: 8 }}>
                     Assign Team Members
                   </div>
                   <div
@@ -235,7 +235,7 @@ const ManageTeams = () => {
                           alignItems: "center",
                           padding: "6px 4px",
                           fontSize: 13,
-                          color: "#2f343f",
+                          color: "var(--text-main)",
                         }}
                       >
                         <input
@@ -269,3 +269,4 @@ const ManageTeams = () => {
 };
 
 export default ManageTeams;
+

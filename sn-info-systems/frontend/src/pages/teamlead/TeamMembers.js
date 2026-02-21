@@ -52,7 +52,7 @@ const TeamMembers = () => {
           onChange={(e) => setSearch(e.target.value)}
           style={{ minWidth: 280 }}
         />
-        <span style={{ color: "#64748b", fontSize: 13 }}>{filtered.length} members</span>
+        <span style={{ color: "var(--text-soft)", fontSize: 13 }}>{filtered.length} members</span>
       </div>
 
       <div className="page-card">
@@ -77,7 +77,7 @@ const TeamMembers = () => {
               <tbody>
                 {filtered.map((m) => (
                   <tr key={m._id}>
-                    <td style={{ color: "#2f343f", fontWeight: 700 }}>{m.name}</td>
+                    <td style={{ color: "var(--text-main)", fontWeight: 700 }}>{m.name}</td>
                     <td>{m.email}</td>
                     <td><Badge status={m.role} /></td>
                     <td>{m.phone || "-"}</td>
@@ -94,3 +94,4 @@ const TeamMembers = () => {
 };
 
 export default TeamMembers;
+

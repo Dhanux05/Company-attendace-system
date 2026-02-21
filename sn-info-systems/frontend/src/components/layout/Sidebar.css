@@ -6,15 +6,16 @@
   height: 100vh;
   width: 280px;
   background:
-    radial-gradient(420px 240px at -80px -60px, #56617a 0%, transparent 65%),
-    linear-gradient(180deg, #2f3745 0%, #232b37 100%);
-  border-right: 1px solid #50596a;
+    radial-gradient(360px 220px at 20% 0%, rgba(94, 151, 255, 0.26) 0%, transparent 62%),
+    radial-gradient(420px 280px at 85% 35%, rgba(43, 103, 224, 0.2) 0%, transparent 70%),
+    linear-gradient(180deg, #071535 0%, #06112a 52%, #040c1f 100%);
+  border-right: 1px solid rgba(153, 180, 225, 0.22);
   display: flex;
   flex-direction: column;
   transition: width 0.3s ease, transform 0.3s ease;
   z-index: 100;
   overflow: hidden;
-  box-shadow: 8px 0 24px rgba(22, 26, 33, 0.28);
+  box-shadow: 12px 0 28px rgba(5, 8, 16, 0.48);
 }
 
 .sidebar.collapsed {
@@ -26,7 +27,7 @@
   align-items: center;
   gap: 12px;
   padding: 18px 14px 16px;
-  border-bottom: 1px solid rgba(198, 207, 222, 0.2);
+  border-bottom: 1px solid rgba(153, 180, 225, 0.22);
 }
 
 .brand-icon {
@@ -52,13 +53,13 @@
 .brand-title {
   font-weight: 800;
   font-size: 15px;
-  color: #f6f8fb;
+  color: #eef4ff;
   white-space: nowrap;
 }
 
 .brand-sub {
   font-size: 11px;
-  color: #c3ccda;
+  color: #9fb1d2;
   white-space: nowrap;
 }
 
@@ -78,9 +79,9 @@
   gap: 12px;
   padding: 12px 12px 12px 14px;
   border-radius: 12px;
-  color: #dde4ef;
+  color: #ccd8ef;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
   cursor: pointer;
   border: 1px solid transparent;
   background: none;
@@ -89,18 +90,19 @@
 }
 
 .nav-item:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(215, 224, 237, 0.22);
-  color: #f9fbff;
-  transform: translateX(2px);
+  background: rgba(59, 130, 246, 0.16);
+  border-color: rgba(150, 191, 255, 0.32);
+  color: #f6f9ff;
+  transform: translateX(3px);
+  box-shadow: 0 10px 22px rgba(20, 48, 94, 0.34);
 }
 
 .nav-item.active {
-  background: #e8dece;
-  color: #2e3541;
-  border-color: #cdbfa9;
+  background: linear-gradient(135deg, rgba(64, 125, 230, 0.52), rgba(84, 166, 255, 0.42));
+  color: #f7fbff;
+  border-color: rgba(153, 199, 255, 0.62);
   font-weight: 700;
-  box-shadow: inset 0 0 0 1px rgba(115, 91, 61, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(193, 221, 255, 0.2), 0 10px 24px rgba(20, 48, 94, 0.34);
 }
 
 .nav-item.active::before {
@@ -111,7 +113,7 @@
   bottom: 10px;
   width: 3px;
   border-radius: 999px;
-  background: #7a5c3e;
+  background: linear-gradient(180deg, #9fc6ff 0%, #5ea2ff 100%);
 }
 
 .nav-icon {
@@ -144,8 +146,8 @@
 
 .sidebar-footer {
   padding: 12px 8px;
-  border-top: 1px solid rgba(198, 207, 222, 0.2);
-  background: rgba(16, 21, 29, 0.14);
+  border-top: 1px solid rgba(153, 180, 225, 0.22);
+  background: rgba(8, 12, 22, 0.4);
 }
 
 .user-item {
@@ -160,22 +162,23 @@
 .sidebar .sidebar-footer .user-name {
   font-size: 13px;
   font-weight: 700;
-  color: #f6f8fb;
+  color: #eef4ff;
 }
 
 .sidebar .sidebar-footer .user-role {
   font-size: 11px;
-  color: #c3ccda;
+  color: #9fb1d2;
   text-transform: capitalize;
 }
 
 .logout-btn {
-  color: #f5b6b6;
+  color: #ffb7b7;
 }
 
 .logout-btn:hover {
-  background: rgba(152, 72, 72, 0.32);
-  color: #ffe1e1;
+  background: rgba(255, 90, 90, 0.24);
+  color: #ffe9e9;
+  box-shadow: 0 10px 22px rgba(79, 17, 17, 0.34);
 }
 
 @media (max-width: 768px) {
@@ -199,3 +202,4 @@
     display: block;
   }
 }
+
