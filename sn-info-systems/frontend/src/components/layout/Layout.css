@@ -1,0 +1,46 @@
+
+.layout { display: flex; min-height: 100vh; background: transparent; }
+.layout-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 260px;
+  transition: margin-left 0.3s;
+}
+.layout-main.expanded { margin-left: 72px; }
+.layout-content {
+  flex: 1;
+  padding: 26px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background:
+    radial-gradient(840px 300px at 18% -8%, rgba(160, 123, 85, 0.22) 0%, transparent 66%),
+    radial-gradient(620px 240px at 84% 5%, rgba(130, 101, 71, 0.16) 0%, transparent 64%),
+    radial-gradient(520px 220px at 48% 100%, rgba(255, 250, 242, 0.42) 0%, transparent 72%),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(255, 255, 255, 0.24) 0px,
+      rgba(255, 255, 255, 0.24) 2px,
+      rgba(255, 255, 255, 0) 2px,
+      rgba(255, 255, 255, 0) 15px
+    ),
+    linear-gradient(180deg, #fbf7ef 0%, #f3ede1 56%, #ede3d4 100%);
+}
+
+.sidebar-backdrop {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .layout-main { margin-left: 0; }
+  .layout-main.expanded { margin-left: 0; }
+  .layout-content { padding: 12px; }
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    border: none;
+    background: rgba(23, 28, 36, 0.45);
+    z-index: 95;
+  }
+}

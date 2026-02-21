@@ -1,0 +1,12 @@
+
+.badge {
+  display: inline-flex; align-items: center; padding: 3px 10px;
+  border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.3px;
+}
+.badge-green { background: #10b98120; color: #34d399; border: 1px solid #10b98130; }
+.badge-yellow { background: #f59e0b20; color: #fbbf24; border: 1px solid #f59e0b30; }
+.badge-red { background: #ef444420; color: #f87171; border: 1px solid #ef444430; }
+.badge-orange { background: #f9731620; color: #fb923c; border: 1px solid #f9731630; }
+.badge-blue { background: #0ea5e920; color: #38bdf8; border: 1px solid #0ea5e930; }
+.badge-purple { background: #8b5cf620; color: #a78bfa; border: 1px solid #8b5cf630; }
+.badge-gray { background: #64748b20; color: #94a3b8; border: 1px solid #64748b30; }
