@@ -1,13 +1,49 @@
 
 .badge {
-  display: inline-flex; align-items: center; padding: 3px 10px;
-  border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.3px;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 8px 16px rgba(5, 12, 28, 0.24);
+  text-shadow: 0 1px 2px rgba(6, 12, 24, 0.35);
 }
-.badge-green { background: rgba(39, 211, 162, 0.2); color: #8bf4d5; border: 1px solid rgba(112, 235, 195, 0.35); }
-.badge-yellow { background: rgba(246, 180, 98, 0.2); color: #ffd7a3; border: 1px solid rgba(255, 202, 133, 0.35); }
-.badge-red { background: rgba(255, 113, 113, 0.2); color: #ffbbbb; border: 1px solid rgba(255, 150, 150, 0.36); }
-.badge-orange { background: rgba(255, 152, 98, 0.2); color: #ffc5a1; border: 1px solid rgba(255, 187, 147, 0.36); }
-.badge-blue { background: rgba(60, 207, 255, 0.2); color: #9de9ff; border: 1px solid rgba(124, 221, 255, 0.35); }
-.badge-purple { background: rgba(79, 174, 141, 0.2); color: #9de3c8; border: 1px solid rgba(122, 201, 171, 0.35); }
-.badge-gray { background: rgba(126, 139, 177, 0.2); color: #c8d1ed; border: 1px solid rgba(157, 172, 212, 0.35); }
+.badge-green {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  color: #eafff2;
+  box-shadow: 0 8px 16px rgba(22, 163, 74, 0.35), 0 0 14px rgba(74, 222, 128, 0.24);
+}
+.badge-yellow {
+  background: linear-gradient(135deg, #ea8624, #f59e0b);
+  color: #fff6e7;
+  box-shadow: 0 8px 16px rgba(234, 136, 36, 0.34), 0 0 14px rgba(251, 191, 36, 0.24);
+}
+.badge-red {
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+  color: #fff1f1;
+  box-shadow: 0 8px 16px rgba(220, 38, 38, 0.34), 0 0 14px rgba(248, 113, 113, 0.24);
+}
+.badge-orange {
+  background: linear-gradient(135deg, #fb923c, #f56529);
+  color: #fff6ee;
+  box-shadow: 0 8px 16px rgba(249, 115, 22, 0.34), 0 0 14px rgba(251, 146, 60, 0.24);
+}
+.badge-blue {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  color: #eef6ff;
+  box-shadow: 0 8px 16px rgba(37, 99, 235, 0.34), 0 0 14px rgba(96, 165, 250, 0.24);
+}
+.badge-purple {
+  background: linear-gradient(135deg, #7c3aed, #9333ea);
+  color: #f5f1ff;
+  box-shadow: 0 8px 16px rgba(124, 58, 237, 0.34), 0 0 14px rgba(167, 139, 250, 0.24);
+}
+.badge-gray {
+  background: linear-gradient(135deg, #475569, #64748b);
+  color: #edf2fb;
+  box-shadow: 0 8px 16px rgba(51, 65, 85, 0.34), 0 0 14px rgba(148, 163, 184, 0.2);
+}
 

@@ -373,9 +373,9 @@ const MarkAttendance = () => {
         <div className="today-status-card">
           <h3>Today's Status</h3>
           <div className="status-row">
-            <span className="status-item"><strong>Login:</strong> {fmtTime(todayRecord.loginTime)}</span>
-            <span className="status-item"><strong>Logout:</strong> {fmtTime(todayRecord.logoutTime)}</span>
-            <span className="status-item"><strong>Hours:</strong> {todayRecord.totalHours > 0 ? `${todayRecord.totalHours}h` : "—"}</span>
+            <span className="status-item"><strong>Login:</strong> <span className="stat-number">{fmtTime(todayRecord.loginTime)}</span></span>
+            <span className="status-item"><strong>Logout:</strong> <span className="stat-number">{fmtTime(todayRecord.logoutTime)}</span></span>
+            <span className="status-item"><strong>Hours:</strong> <span className="stat-number">{todayRecord.totalHours > 0 ? `${todayRecord.totalHours}h` : "—"}</span></span>
             <span className={`status-badge status-${todayRecord.status?.toLowerCase()}`}>{todayRecord.status}</span>
           </div>
         </div>
@@ -387,7 +387,7 @@ const MarkAttendance = () => {
           <p style={{ marginBottom: 10, color: "var(--text-soft)", fontSize: 13 }}>
             Company Address: {OFFICE_ADDRESS}
           </p>
-          <button className="btn btn-outline" onClick={getLocation}>
+          <button className="btn btn-location-refresh" onClick={getLocation}>
             {user.faceRegistered ? "Refresh Live Location" : "Get My Location"}
           </button>
           {locationError && <div className="att-error">{locationError}</div>}
@@ -405,7 +405,7 @@ const MarkAttendance = () => {
           
           {!cameraActive && !faceCapture && (
             user.faceRegistered ? (
-              <button className="btn btn-outline" onClick={handleVerifyAndAutoMark} disabled={loading}>
+              <button className="btn-auto-verify" onClick={handleVerifyAndAutoMark} disabled={loading}>
                 {loading ? "Processing..." : "Auto Verify Now"}
               </button>
             ) : (

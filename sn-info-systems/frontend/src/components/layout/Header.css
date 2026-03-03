@@ -15,6 +15,25 @@
 .header-date { font-size: 13px; color: #a9bbda; font-weight: 600; }
 .header-right { display: flex; align-items: center; gap: 16px; }
 .header-time { font-size: 14px; font-weight: 700; color: #77beff; font-variant-numeric: tabular-nums; }
+.header-notification-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid rgba(141, 174, 225, 0.35);
+  background: rgba(59, 130, 246, 0.12);
+  color: #dbeafe;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease, color 0.16s ease;
+}
+.header-notification-btn:hover {
+  background: rgba(59, 130, 246, 0.25);
+  color: #f8fbff;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(27, 68, 132, 0.26);
+}
 .header-user { display: flex; align-items: center; gap: 10px; }
 .profile-trigger {
   border: none;
@@ -30,7 +49,7 @@
   position: absolute;
   right: 0;
   top: calc(100% + 8px);
-  min-width: 160px;
+  min-width: 190px;
   background: #ffffff;
   border: 1px solid rgba(15, 23, 42, 0.12);
   border-radius: 10px;
@@ -50,13 +69,24 @@
   cursor: pointer;
 }
 .profile-action:hover { background: rgba(59, 130, 246, 0.12); }
-.profile-action.danger { color: #ff9c9c; }
+.profile-action.danger { color: #dc2626; }
 .profile-action.danger:hover { background: rgba(255, 98, 98, 0.2); }
 .user-avatar {
   width: 36px; height: 36px; border-radius: 50%;
   background: linear-gradient(135deg, #3b82f6, #60a5fa);
   display: flex; align-items: center; justify-content: center;
   font-weight: 800; font-size: 14px; color: #0e1223;
+  overflow: hidden;
+}
+.user-avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.user-avatar.large {
+  width: 64px;
+  height: 64px;
+  font-size: 20px;
 }
 .user-details { display: flex; flex-direction: column; }
 .user-name { font-size: 13px; font-weight: 700; color: #eef4ff; }
@@ -92,6 +122,62 @@
   margin: 0 0 12px;
   color: #0f172a;
 }
+.photo-settings-block {
+  padding: 10px;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 10px;
+  background: #f8fbff;
+  margin-bottom: 12px;
+}
+.photo-settings-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.photo-preview-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 10px 0 8px;
+}
+.photo-preview-copy {
+  min-width: 0;
+}
+.photo-preview-label {
+  font-size: 12px;
+  color: #334155;
+  font-weight: 600;
+}
+.photo-preview-subtext {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 2px;
+}
+.photo-file-input {
+  display: none;
+}
+.photo-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.btn-photo-change,
+.btn-photo-remove {
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+.btn-photo-change {
+  background: linear-gradient(135deg, #22334f, #1a2a42);
+  color: #eaf2ff;
+}
+.btn-photo-remove {
+  background: linear-gradient(135deg, #4b1f2a, #3b1720);
+  color: #ffd5db;
+}
 .profile-modal label {
   display: block;
   margin: 8px 0 4px;
@@ -121,13 +207,13 @@
 }
 .profile-form-error {
   margin-top: 10px;
-  color: #ff9d9d;
+  color: #b91c1c;
   font-size: 12px;
   font-weight: 600;
 }
 .profile-form-success {
   margin-top: 10px;
-  color: #81f2cf;
+  color: #047857;
   font-size: 12px;
   font-weight: 600;
 }
@@ -147,8 +233,9 @@
   cursor: pointer;
 }
 .btn-cancel {
-  background: #eef3fb;
-  color: var(--text-soft);
+  background: linear-gradient(135deg, #22334f, #1a2a42);
+  color: #eaf2ff;
+  border: 1px solid rgba(141, 174, 225, 0.45);
 }
 .btn-save {
   background: linear-gradient(135deg, #3b82f6, #60a5fa);
@@ -159,13 +246,13 @@
   cursor: not-allowed;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .header {
     height: auto;
     min-height: 62px;
     width: 100%;
     box-sizing: border-box;
-    overflow: hidden;
+    overflow: visible;
     padding: 8px 12px;
     gap: 10px;
   }
@@ -179,14 +266,16 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .header-right { gap: 6px; margin-right: 0; flex-shrink: 0; }
+  .header-right { gap: 6px; margin-right: 0; flex-shrink: 0; overflow: visible; }
   .header-time { display: none; }
+  .header-notification-btn { width: 34px; height: 34px; }
   .header-user { gap: 6px; }
   .user-avatar { width: 34px; height: 34px; font-size: 13px; }
   .user-details { display: none; }
   .role-badge { font-size: 9px; padding: 1px 5px; }
   .profile-modal-backdrop { padding-top: 76px; }
   .profile-modal { max-height: calc(100vh - 96px); }
+  .photo-actions { flex-direction: column; }
 }
 
 @media (max-width: 480px) {

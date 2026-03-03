@@ -5,7 +5,7 @@ import Header from "./Header";
 import "./Layout.css";
 
 const Layout = () => {
-  const isMobileView = () => typeof window !== "undefined" && window.innerWidth <= 768;
+  const isMobileView = () => typeof window !== "undefined" && window.innerWidth <= 1024;
   const [isMobile, setIsMobile] = useState(isMobileView);
   const [sidebarOpen, setSidebarOpen] = useState(() => !isMobileView());
 

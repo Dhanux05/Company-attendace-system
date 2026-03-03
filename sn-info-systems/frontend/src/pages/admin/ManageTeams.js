@@ -1,31 +1,43 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { userService } from "../../services/api";
+import { getTeams, getUsers, invalidateAdminReferenceData } from "../../services/adminDataStore";
 import "../intern/Pages.css";
 
 const ManageTeams = () => {
   const [teams, setTeams] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [usersLoading, setUsersLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ name: "", description: "", leaderId: "", memberIds: [] });
   const [saving, setSaving] = useState(false);
   const [editingTeamId, setEditingTeamId] = useState(null);
   const [editForm, setEditForm] = useState({ leaderId: "", memberIds: [] });
 
-  const loadData = () => {
+  const loadTeams = () => {
     setLoading(true);
-    Promise.all([userService.getTeams(), userService.getAll()])
-      .then(([t, u]) => {
-        setTeams(t.data);
-        setUsers(u.data);
+    getTeams()
+      .then((teamsData) => {
+        setTeams(teamsData);
         setLoading(false);
       })
       .catch(() => setLoading(false));
   };
 
+  const loadUsersIfNeeded = async () => {
+    if (users.length) return;
+    setUsersLoading(true);
+    try {
+      const usersData = await getUsers();
+      setUsers(usersData);
+    } finally {
+      setUsersLoading(false);
+    }
+  };
+
   useEffect(() => {
-    loadData();
+    loadTeams();
   }, []);
 
   const handleCreate = async (e) => {
@@ -36,7 +48,8 @@ const ManageTeams = () => {
       setTeams((prev) => [...prev, data]);
       setForm({ name: "", description: "", leaderId: "", memberIds: [] });
       setShowForm(false);
-      loadData();
+      invalidateAdminReferenceData({ users: false, teams: true });
+      loadTeams();
     } catch (e) {
       alert(e.response?.data?.message || "Failed");
     }
@@ -48,10 +61,12 @@ const ManageTeams = () => {
     try {
       await userService.deleteTeam(id);
       setTeams((prev) => prev.map((t) => (t._id === id ? { ...t, isActive: false } : t)));
+      invalidateAdminReferenceData({ users: false, teams: true });
     } catch (e) {}
   };
 
-  const startEditTeam = (team) => {
+  const startEditTeam = async (team) => {
+    await loadUsersIfNeeded();
     setEditingTeamId(team._id);
     const memberIds = (team.members || []).map((m) => m._id);
     setEditForm({
@@ -88,10 +103,17 @@ const ManageTeams = () => {
       const { data } = await userService.updateTeam(team._id, payload);
       setTeams((prev) => prev.map((t) => (t._id === team._id ? data : t)));
       cancelEditTeam();
-      loadData();
+      invalidateAdminReferenceData({ users: true, teams: true });
+      loadTeams();
     } catch (e) {
       alert(e.response?.data?.message || "Failed to update team");
     }
+  };
+
+  const handleToggleCreateForm = async () => {
+    const next = !showForm;
+    if (next) await loadUsersIfNeeded();
+    setShowForm(next);
   };
 
   const leads = users.filter((u) => (u.role === "teamlead" || u.role === "intern") && u.isActive);
@@ -103,7 +125,6 @@ const ManageTeams = () => {
         <NavLink to="/admin-portal/users" className={({ isActive }) => `sub-nav-link ${isActive ? "active" : ""}`}>Members</NavLink>
         <NavLink to="/admin-portal/attendance" className={({ isActive }) => `sub-nav-link ${isActive ? "active" : ""}`}>Attendance</NavLink>
         <NavLink to="/admin-portal/leaves" className={({ isActive }) => `sub-nav-link ${isActive ? "active" : ""}`}>Leaves</NavLink>
-        <NavLink to="/admin-portal/analytics" className={({ isActive }) => `sub-nav-link ${isActive ? "active" : ""}`}>Analytics</NavLink>
       </div>
       <div className="page-header page-header-center">
         <h1>Manage Teams</h1>
@@ -113,7 +134,7 @@ const ManageTeams = () => {
         <button
           className="btn-primary"
           style={{ width: "auto", padding: "10px 20px", display: "inline-block" }}
-          onClick={() => setShowForm(!showForm)}
+          onClick={handleToggleCreateForm}
         >
           {showForm ? "Cancel" : "+ Create Team"}
         </button>
@@ -150,6 +171,7 @@ const ManageTeams = () => {
                   </option>
                 ))}
               </select>
+              {usersLoading && <div style={{ marginTop: 8, fontSize: 12, color: "var(--text-soft)" }}>Loading members...</div>}
             </div>
             <button type="submit" className="btn btn-success" disabled={saving}>
               {saving ? "Creating..." : "Create Team"}
@@ -165,10 +187,10 @@ const ManageTeams = () => {
           <div className="empty-state">No teams created yet</div>
         </div>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
           {teams.map((t) => (
             <div key={t._id} className="page-card" style={{ opacity: t.isActive === false ? 0.5 : 1 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10, flexWrap: "wrap" }}>
                 <div>
                   <h3 style={{ color: "var(--text-main)", fontWeight: 700, marginBottom: 4 }}>{t.name}</h3>
                   <p style={{ fontSize: 12, color: "var(--text-soft)" }}>{t.description || "No description"}</p>
@@ -220,10 +242,10 @@ const ManageTeams = () => {
                     style={{
                       maxHeight: 210,
                       overflowY: "auto",
-                      border: "1px solid #d8d0c2",
+                      border: "1px solid #cbd5e1",
                       borderRadius: 8,
                       padding: 8,
-                      background: "#fff",
+                      background: "#f8fafc",
                     }}
                   >
                     {assignableUsers.map((u) => (
@@ -235,13 +257,15 @@ const ManageTeams = () => {
                           alignItems: "center",
                           padding: "6px 4px",
                           fontSize: 13,
-                          color: "var(--text-main)",
+                          color: "#0f172a",
+                          fontWeight: 600,
                         }}
                       >
                         <input
                           type="checkbox"
                           checked={editForm.memberIds.includes(u._id)}
                           onChange={() => toggleMember(u._id)}
+                          style={{ accentColor: "#2563eb" }}
                         />
                         <span>
                           {u.name} ({u.role})

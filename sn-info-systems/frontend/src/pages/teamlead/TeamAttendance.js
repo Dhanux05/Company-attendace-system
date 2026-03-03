@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { attendanceService } from "../../services/api";
+import { attendanceService, auditService } from "../../services/api";
 import Badge from "../../components/common/Badge";
 import "../intern/Pages.css";
 
 const TeamAttendance = () => {
   const [records, setRecords] = useState([]);
+  const [timeline, setTimeline] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const now = new Date();
@@ -17,8 +18,12 @@ const TeamAttendance = () => {
     setLoading(true);
     setError("");
     try {
-      const { data } = await attendanceService.getTeam({ date });
-      setRecords(data);
+      const [teamData, timelineData] = await Promise.all([
+        attendanceService.getTeam({ date }),
+        auditService.getTodayTimeline(),
+      ]);
+      setRecords(teamData.data);
+      setTimeline(timelineData.data || []);
     } catch (e) {
       setRecords([]);
       setError(e.response?.data?.message || "Unable to load team attendance");
@@ -66,6 +71,28 @@ const TeamAttendance = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+        )}
+      </div>
+
+      <div className="page-card" style={{ marginTop: 16 }}>
+        <div className="section-header">
+          <h2>Today's Actions Timeline</h2>
+        </div>
+        {!timeline.length ? (
+          <div className="empty-state">No actions logged today</div>
+        ) : (
+          <div style={{ display: "grid", gap: 10 }}>
+            {timeline.slice(0, 10).map((item) => (
+              <div key={item._id} style={{ border: "1px solid rgba(148,163,184,0.24)", borderRadius: 10, padding: 10, background: "rgba(15,23,42,0.4)" }}>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <div style={{ color: "#f8fafc", fontWeight: 700 }}>{item.module} / {item.action}</div>
+                  <div style={{ color: "#94a3b8", fontSize: 11 }}>{new Date(item.createdAt).toLocaleTimeString()}</div>
+                </div>
+                <div style={{ color: "#cbd5e1", fontSize: 13, marginTop: 4 }}>{item.message || "Action recorded"}</div>
+                <div style={{ color: "#94a3b8", fontSize: 11, marginTop: 4 }}>By {item.actor?.name || "Unknown"}</div>
+              </div>
+            ))}
           </div>
         )}
       </div>

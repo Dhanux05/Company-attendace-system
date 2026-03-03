@@ -63,7 +63,7 @@ const LeaveApproval = () => {
           <div style={{ marginTop: 12, display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
             <input
               placeholder="Optional review note..."
-              style={{ flex: 1, background: "#ffffff", border: "1px solid #cfc4b1", borderRadius: 8, padding: "8px 10px", color: "var(--text-main)", fontSize: 13, minWidth: 200 }}
+              style={{ flex: "1 1 220px", background: "#ffffff", border: "1px solid #cfc4b1", borderRadius: 8, padding: "8px 10px", color: "var(--text-main)", fontSize: 13, minWidth: 0, maxWidth: "100%" }}
               value={note}
               onChange={e => setNote(e.target.value)}
             />

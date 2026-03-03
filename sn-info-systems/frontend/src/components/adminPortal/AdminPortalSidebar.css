@@ -62,7 +62,7 @@
   padding: 12px 8px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 7px;
 }
 
 .admin-portal-link {
@@ -70,13 +70,14 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 12px;
+  padding: 11px 12px;
   border-radius: 8px;
-  color: #ccd8ef;
+  color: #b3c1d9;
   text-decoration: none;
   background: transparent;
   border: none;
   font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
   transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
 }
@@ -91,8 +92,8 @@
 .admin-portal-link.active {
   background: linear-gradient(135deg, rgba(64, 125, 230, 0.52), rgba(84, 166, 255, 0.42));
   border: 1px solid rgba(153, 199, 255, 0.62);
-  color: #f7fbff;
-  font-weight: 700;
+  color: #ffffff;
+  font-weight: 600;
   box-shadow: 0 10px 24px rgba(20, 48, 94, 0.34);
 }
 
@@ -113,6 +114,7 @@
 
 .admin-portal-link-label {
   white-space: nowrap;
+  font-weight: 500;
 }
 
 .admin-portal-footer {
@@ -159,7 +161,7 @@
   box-shadow: 0 10px 22px rgba(79, 17, 17, 0.34);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .admin-portal-sidebar {
     width: 280px;
     transform: translateX(-100%);

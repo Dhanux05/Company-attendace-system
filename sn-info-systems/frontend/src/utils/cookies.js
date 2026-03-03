@@ -1,10 +1,13 @@
 import Cookies from "js-cookie";
 
-const DEFAULT_DAYS = 7;
 const COOKIE_OPTIONS = { path: "/", sameSite: "Lax" };
 
-export const setCookie = (name, value, days = DEFAULT_DAYS) => {
-  Cookies.set(name, value, { ...COOKIE_OPTIONS, expires: days });
+export const setCookie = (name, value, days) => {
+  const options = { ...COOKIE_OPTIONS };
+  if (typeof days === "number") {
+    options.expires = days;
+  }
+  Cookies.set(name, value, options);
 };
 
 export const getCookie = (name) => {

@@ -23,6 +23,15 @@ const Login = () => {
     setLoading(true); setError("");
     const result = await login(form.email, form.password);
     if (result.success) {
+      if (result.requires2FA) {
+        try {
+          sessionStorage.setItem("temp2FAToken", result.tempToken || "");
+          sessionStorage.setItem("temp2FAEmail", form.email || "");
+        } catch (e) {}
+        navigate("/2fa");
+        setLoading(false);
+        return;
+      }
       setAnimateOut(true);
       const role = result.data.role;
       setTimeout(() => {

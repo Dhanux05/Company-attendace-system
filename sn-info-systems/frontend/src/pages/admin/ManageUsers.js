@@ -2,8 +2,18 @@ import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { FiEdit2 } from "react-icons/fi";
 import { userService } from "../../services/api";
+import { getTeams, getUsers, invalidateAdminReferenceData, updateCachedUser } from "../../services/adminDataStore";
 import Badge from "../../components/common/Badge";
 import "../intern/Pages.css";
+
+const editControlStyle = {
+  background: "#0f172a",
+  border: "1px solid #334155",
+  borderRadius: 6,
+  padding: "6px 10px",
+  color: "#f8fafc",
+  width: "100%",
+};
 
 const ManageUsers = () => {
   const [users, setUsers] = useState([]);
@@ -14,12 +24,35 @@ const ManageUsers = () => {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    Promise.all([userService.getAll(), userService.getTeams()])
-      .then(([u, t]) => { setUsers(u.data); setTeams(t.data); setLoading(false); })
-      .catch(() => setLoading(false));
+    let active = true;
+    getUsers()
+      .then((data) => {
+        if (!active) return;
+        setUsers(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        if (!active) return;
+        setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
   }, []);
 
-  const handleEdit = (user) => {
+  const ensureTeamsLoaded = async () => {
+    if (teams.length) return teams;
+    try {
+      const data = await getTeams();
+      setTeams(data);
+      return data;
+    } catch (e) {
+      return [];
+    }
+  };
+
+  const handleEdit = async (user) => {
+    await ensureTeamsLoaded();
     setEditing(user._id);
     setForm({ name: user.name, email: user.email, role: user.role, phone: user.phone || "", team: user.team?._id || "", isActive: user.isActive });
   };
@@ -28,6 +61,8 @@ const ManageUsers = () => {
     try {
       const { data } = await userService.update(editing, form);
       setUsers(prev => prev.map(u => u._id === editing ? data : u));
+      updateCachedUser(data);
+      invalidateAdminReferenceData({ users: false, teams: true });
       setEditing(null);
     } catch (e) { alert(e.response?.data?.message || "Failed"); }
   };
@@ -36,6 +71,7 @@ const ManageUsers = () => {
     try {
       const { data } = await userService.update(id, { isActive: !isActive });
       setUsers(prev => prev.map(u => u._id === id ? data : u));
+      updateCachedUser(data);
     } catch (e) {}
   };
 
@@ -50,14 +86,13 @@ const ManageUsers = () => {
         <NavLink to="/admin-portal/users" className={({ isActive }) => `sub-nav-link ${isActive ? "active" : ""}`}>Members</NavLink>
         <NavLink to="/admin-portal/attendance" className={({ isActive }) => `sub-nav-link ${isActive ? "active" : ""}`}>Attendance</NavLink>
         <NavLink to="/admin-portal/leaves" className={({ isActive }) => `sub-nav-link ${isActive ? "active" : ""}`}>Leaves</NavLink>
-        <NavLink to="/admin-portal/analytics" className={({ isActive }) => `sub-nav-link ${isActive ? "active" : ""}`}>Analytics</NavLink>
       </div>
       <div className="page-header page-header-center">
         <h1>Manage Users</h1>
         <p>View and manage all system users</p>
       </div>
       <div className="filter-bar">
-        <input placeholder="Search by name or email..." value={search} onChange={e => setSearch(e.target.value)} style={{ minWidth: 280 }} />
+        <input placeholder="Search by name or email..." value={search} onChange={e => setSearch(e.target.value)} style={{ flex: "1 1 220px", minWidth: 0, maxWidth: "100%" }} />
         <span style={{ color: "var(--text-soft)", fontSize: 13 }}>{filtered.length} users</span>
       </div>
       <div className="page-card">
@@ -70,17 +105,17 @@ const ManageUsers = () => {
                   <tr key={u._id}>
                     {editing === u._id ? (
                       <>
-                        <td><input value={form.name} onChange={e => setForm({...form, name: e.target.value})} style={{ background: "#ffffff", border: "1px solid #cfc4b1", borderRadius: 6, padding: "6px 10px", color: "var(--text-main)", width: "100%" }} /></td>
-                        <td><input value={form.email} onChange={e => setForm({...form, email: e.target.value})} style={{ background: "#ffffff", border: "1px solid #cfc4b1", borderRadius: 6, padding: "6px 10px", color: "var(--text-main)", width: "100%" }} /></td>
+                        <td><input value={form.name} onChange={e => setForm({...form, name: e.target.value})} style={editControlStyle} /></td>
+                        <td><input value={form.email} onChange={e => setForm({...form, email: e.target.value})} style={editControlStyle} /></td>
                         <td>
-                          <select value={form.role} onChange={e => setForm({...form, role: e.target.value})} style={{ background: "#ffffff", border: "1px solid #cfc4b1", borderRadius: 6, padding: "6px 10px", color: "var(--text-main)" }}>
+                          <select value={form.role} onChange={e => setForm({...form, role: e.target.value})} style={editControlStyle}>
                             <option value="intern">intern</option>
                             <option value="teamlead">teamlead</option>
                             <option value="admin">admin</option>
                           </select>
                         </td>
                         <td>
-                          <select value={form.team} onChange={e => setForm({...form, team: e.target.value})} style={{ background: "#ffffff", border: "1px solid #cfc4b1", borderRadius: 6, padding: "6px 10px", color: "var(--text-main)" }}>
+                          <select value={form.team} onChange={e => setForm({...form, team: e.target.value})} style={editControlStyle}>
                             <option value="">No Team</option>
                             {teams.map(t => <option key={t._id} value={t._id}>{t.name}</option>)}
                           </select>

@@ -3,6 +3,9 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import TwoFactorVerify from "./pages/TwoFactorVerify";
+import AccountSettings from "./pages/AccountSettings";
+import Notifications from "./pages/Notifications";
 import Layout from "./components/layout/Layout";
 import AdminPortalLayout from "./components/adminPortal/AdminPortalLayout";
 
@@ -16,7 +19,6 @@ import LeaveHistory from "./pages/intern/LeaveHistory";
 // Teamlead pages
 import TeamAttendance from "./pages/teamlead/TeamAttendance";
 import LeaveApproval from "./pages/teamlead/LeaveApproval";
-import TeamAnalytics from "./pages/teamlead/TeamAnalytics";
 import TeamMembers from "./pages/teamlead/TeamMembers";
 
 // Admin pages
@@ -24,13 +26,14 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import ManageUsers from "./pages/admin/ManageUsers";
 import ManageTeams from "./pages/admin/ManageTeams";
 import FullAttendance from "./pages/admin/FullAttendance";
-import AnalyticsDashboard from "./pages/admin/AnalyticsDashboard";
 import AdminPortalDashboard from "./pages/admin/AdminPortalDashboard";
 import AdminLeaveManagement from "./pages/admin/AdminLeaveManagement";
+import AuditLogs from "./pages/admin/AuditLogs";
+import Reports from "./pages/admin/Reports";
 
 const HOME_BY_ROLE = {
-  admin: "/admin-portal/dashboard",
-  teamlead: "/teamlead/attendance",
+  admin: "/admin/dashboard",
+  teamlead: "/intern/dashboard",
   intern: "/intern/dashboard",
 };
 
@@ -40,14 +43,16 @@ const getHomePath = (user) => {
 };
 
 const ProtectedRoute = ({ children, roles }) => {
-  const { user } = useAuth();
+  const { user, authReady } = useAuth();
+  if (!authReady) return null;
   if (!user) return <Navigate to="/login" replace />;
   if (roles && !roles.includes(user.role)) return <Navigate to={getHomePath(user)} replace />;
   return children;
 };
 
 const HomeRedirect = () => {
-  const { user } = useAuth();
+  const { user, authReady } = useAuth();
+  if (!authReady) return null;
   return <Navigate to={getHomePath(user)} replace />;
 };
 
@@ -59,6 +64,7 @@ function App() {
           <Route path="/" element={<HomeRedirect />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/2fa" element={<TwoFactorVerify />} />
 
           {/* Intern Routes */}
           <Route
@@ -69,12 +75,14 @@ function App() {
               </ProtectedRoute>
             }
           >
-            <Route path="admin" element={<Navigate to="/admin-portal/dashboard" replace />} />
+            <Route path="admin" element={<Navigate to="/admin/dashboard" replace />} />
             <Route path="dashboard" element={<InternDashboard />} />
             <Route path="attendance" element={<MarkAttendance />} />
             <Route path="leave" element={<LeaveApplication />} />
             <Route path="attendance-history" element={<AttendanceHistory />} />
             <Route path="leave-history" element={<LeaveHistory />} />
+            <Route path="account-settings" element={<AccountSettings />} />
+            <Route path="notifications" element={<Notifications />} />
           </Route>
 
           {/* Teamlead Routes */}
@@ -89,7 +97,9 @@ function App() {
             <Route path="members" element={<TeamMembers />} />
             <Route path="attendance" element={<TeamAttendance />} />
             <Route path="leaves" element={<LeaveApproval />} />
-            <Route path="analytics" element={<TeamAnalytics />} />
+            <Route path="analytics" element={<Navigate to="/intern/dashboard" replace />} />
+            <Route path="account-settings" element={<AccountSettings />} />
+            <Route path="notifications" element={<Notifications />} />
           </Route>
 
           {/* Existing Admin Routes */}
@@ -101,13 +111,17 @@ function App() {
               </ProtectedRoute>
             }
           >
-            <Route index element={<Navigate to="/admin-portal/dashboard" replace />} />
+            <Route index element={<Navigate to="/admin/dashboard" replace />} />
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="users" element={<ManageUsers />} />
             <Route path="teams" element={<ManageTeams />} />
             <Route path="leaves" element={<AdminLeaveManagement />} />
             <Route path="attendance" element={<FullAttendance />} />
-            <Route path="analytics" element={<AnalyticsDashboard />} />
+            <Route path="analytics" element={<Navigate to="/admin/dashboard" replace />} />
+            <Route path="audit" element={<AuditLogs />} />
+            <Route path="reports" element={<Reports />} />
+            <Route path="account-settings" element={<AccountSettings />} />
+            <Route path="notifications" element={<Notifications />} />
           </Route>
 
           {/* Separate Admin Portal */}
@@ -124,7 +138,11 @@ function App() {
             <Route path="teams" element={<ManageTeams />} />
             <Route path="leaves" element={<AdminLeaveManagement />} />
             <Route path="attendance" element={<FullAttendance />} />
-            <Route path="analytics" element={<AnalyticsDashboard />} />
+            <Route path="analytics" element={<Navigate to="/admin-portal/dashboard" replace />} />
+            <Route path="audit" element={<AuditLogs />} />
+            <Route path="reports" element={<Reports />} />
+            <Route path="account-settings" element={<AccountSettings />} />
+            <Route path="notifications" element={<Notifications />} />
             <Route index element={<Navigate to="dashboard" replace />} />
           </Route>
 

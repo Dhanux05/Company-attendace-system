@@ -5,7 +5,7 @@ import AdminPortalSidebar from "./AdminPortalSidebar";
 import "./AdminPortalLayout.css";
 
 const AdminPortalLayout = () => {
-  const isMobileView = () => typeof window !== "undefined" && window.innerWidth <= 768;
+  const isMobileView = () => typeof window !== "undefined" && window.innerWidth <= 1024;
   const [isMobile, setIsMobile] = useState(isMobileView);
   const [sidebarOpen, setSidebarOpen] = useState(() => !isMobileView());
 

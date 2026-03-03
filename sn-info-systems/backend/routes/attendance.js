@@ -10,5 +10,7 @@ router.get('/my', protect, ctrl.getMyAttendance);
 router.get('/team', protect, authorize('teamlead', 'admin'), ctrl.getTeamAttendance);
 router.get('/all', protect, authorize('admin'), ctrl.getAllAttendance);
 router.get('/analytics', protect, authorize('admin', 'teamlead'), ctrl.getAnalytics);
+router.put('/:id', protect, authorize('admin'), ctrl.editAttendance);
+router.post('/alerts/missed-logout', protect, authorize('admin', 'teamlead'), ctrl.sendMissedLogoutAlerts);
 
 module.exports = router;

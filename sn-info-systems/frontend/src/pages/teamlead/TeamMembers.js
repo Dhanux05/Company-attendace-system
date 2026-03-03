@@ -50,7 +50,7 @@ const TeamMembers = () => {
           placeholder="Search by name or email..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          style={{ minWidth: 280 }}
+          style={{ flex: "1 1 220px", minWidth: 0, maxWidth: "100%" }}
         />
         <span style={{ color: "var(--text-soft)", fontSize: 13 }}>{filtered.length} members</span>
       </div>

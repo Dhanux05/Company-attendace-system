@@ -67,7 +67,6 @@ const AdminLeaveManagement = () => {
         <NavLink to="/admin-portal/users" className={({ isActive }) => `sub-nav-link ${isActive ? "active" : ""}`}>Members</NavLink>
         <NavLink to="/admin-portal/attendance" className={({ isActive }) => `sub-nav-link ${isActive ? "active" : ""}`}>Attendance</NavLink>
         <NavLink to="/admin-portal/leaves" className={({ isActive }) => `sub-nav-link ${isActive ? "active" : ""}`}>Leaves</NavLink>
-        <NavLink to="/admin-portal/analytics" className={({ isActive }) => `sub-nav-link ${isActive ? "active" : ""}`}>Analytics</NavLink>
       </div>
       <div className="page-header page-header-center">
         <h1>Manage Leave Requests</h1>
@@ -86,7 +85,7 @@ const AdminLeaveManagement = () => {
           placeholder="Search by user name, email, or leave type"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          style={{ minWidth: 300 }}
+          style={{ flex: "1 1 240px", minWidth: 0, maxWidth: "100%" }}
         />
         <span style={{ color: "var(--text-soft)", fontSize: 13 }}>
           {filtered.length} requests ({pendingCount} pending)

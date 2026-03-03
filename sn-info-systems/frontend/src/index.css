@@ -1,7 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 
 :root {
-  --bg-base: #2f3a46;
+  --bg-base: #0f172a;
   --bg-panel: #f6f8fc;
   --bg-card: #ffffff;
   --bg-card-strong: #f2f6ff;
@@ -20,16 +20,26 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html, body, #root { min-height: 100%; }
+html, body, #root {
+  min-height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
 
 body {
-  font-family: "Manrope", "Segoe UI", sans-serif;
+  font-family: "Inter", "Segoe UI", sans-serif;
   background:
-    radial-gradient(1200px 560px at -12% -25%, rgba(94, 150, 255, 0.22) 0%, transparent 62%),
-    radial-gradient(920px 440px at 110% -20%, rgba(126, 177, 255, 0.18) 0%, transparent 66%),
-    linear-gradient(145deg, #2a3440 0%, #303a47 45%, #2f3945 100%);
+    radial-gradient(1200px 560px at -12% -25%, rgba(59, 130, 246, 0.2) 0%, transparent 62%),
+    radial-gradient(920px 440px at 110% -20%, rgba(139, 92, 246, 0.16) 0%, transparent 66%),
+    linear-gradient(145deg, #0b1221 0%, #0f172a 45%, #0b1323 100%);
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.stat-number {
+  font-weight: 700;
+  letter-spacing: -0.3px;
 }
 
 a { color: inherit; }
