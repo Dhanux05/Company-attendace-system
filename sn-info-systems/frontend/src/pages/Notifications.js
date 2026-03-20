@@ -47,6 +47,10 @@ const Notifications = () => {
   };
 
   const getNotificationTargetPath = (notification) => {
+    if (notification?.type === "team_announcement") {
+      if (user?.role === "admin") return null;
+      return `${getRoleBasePath()}/team`;
+    }
     if (notification?.type === "leave") {
       if (["admin", "teamlead"].includes(user?.role)) {
         return `${getRoleBasePath()}/leaves`;

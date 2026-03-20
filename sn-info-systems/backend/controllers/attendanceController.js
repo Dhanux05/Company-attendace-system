@@ -9,6 +9,7 @@ const getToday = () => new Date().toISOString().split('T')[0];
 const formatDate = (d) => d.toISOString().split('T')[0];
 const LOGIN_LATE_AFTER = process.env.LOGIN_LATE_AFTER || '09:30';
 const LOGOUT_EXPECTED_TIME = process.env.LOGOUT_EXPECTED_TIME || '18:30';
+const FACE_MATCH_THRESHOLD = Number(process.env.FACE_MATCH_THRESHOLD || 0.5);
 
 const timeToMinutes = (value, fallback) => {
   const source = value || fallback;
@@ -28,6 +29,41 @@ const ensureLocation = (lat, lng) => {
   if (Number.isNaN(nLat) || Number.isNaN(nLng)) return null;
   if (nLat < -90 || nLat > 90 || nLng < -180 || nLng > 180) return null;
   return { lat: nLat, lng: nLng };
+};
+
+const euclideanDistance = (a = [], b = []) => {
+  if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length || a.length === 0) return Number.POSITIVE_INFINITY;
+  let sum = 0;
+  for (let i = 0; i < a.length; i += 1) {
+    const diff = Number(a[i]) - Number(b[i]);
+    sum += diff * diff;
+  }
+  return Math.sqrt(sum);
+};
+
+const verifyFaceMatch = async (userId, liveEmbedding) => {
+  if (!Array.isArray(liveEmbedding) || liveEmbedding.length === 0) {
+    return { ok: false, message: 'Face embedding is required' };
+  }
+
+  const user = await User.findById(userId).select('faceEmbedding faceRegistered');
+  if (!user?.faceRegistered || !Array.isArray(user.faceEmbedding) || user.faceEmbedding.length === 0) {
+    return { ok: false, message: 'Face not registered. Please register your face first.' };
+  }
+
+  if (user.faceEmbedding.length !== liveEmbedding.length) {
+    return { ok: false, message: 'Face embedding format mismatch. Please re-register your face.' };
+  }
+
+  const distance = euclideanDistance(user.faceEmbedding, liveEmbedding);
+  if (!Number.isFinite(distance)) {
+    return { ok: false, message: 'Invalid face embedding data' };
+  }
+  if (distance > FACE_MATCH_THRESHOLD) {
+    return { ok: false, message: 'Face mismatch. Attendance not marked.' };
+  }
+
+  return { ok: true, distance };
 };
 
 const parsePeriod = (query) => {
@@ -51,7 +87,7 @@ const parsePeriod = (query) => {
 
 exports.markLogin = async (req, res) => {
   try {
-    const { lat, lng, faceVerified } = req.body;
+    const { lat, lng, faceVerified, faceEmbedding } = req.body;
     const location = ensureLocation(lat, lng);
     if (!location) return res.status(400).json({ message: 'Valid location is required' });
 
@@ -61,6 +97,8 @@ exports.markLogin = async (req, res) => {
       return res.status(400).json({ message: `You are ${distance}m away from office. Must be within ${allowedRadius}m.` });
     }
     if (!faceVerified) return res.status(400).json({ message: 'Face verification required' });
+    const faceMatch = await verifyFaceMatch(req.user._id, faceEmbedding);
+    if (!faceMatch.ok) return res.status(400).json({ message: faceMatch.message });
 
     const date = getToday();
     const existing = await Attendance.findOne({ user: req.user._id, date });
@@ -123,13 +161,15 @@ exports.markLogin = async (req, res) => {
 
 exports.markLogout = async (req, res) => {
   try {
-    const { lat, lng, faceVerified } = req.body;
+    const { lat, lng, faceVerified, faceEmbedding } = req.body;
     const location = ensureLocation(lat, lng);
     if (!location) return res.status(400).json({ message: 'Valid location is required' });
 
     const { withinRange, distance } = isWithinOffice(location.lat, location.lng);
     if (!withinRange) return res.status(400).json({ message: `You are ${distance}m away from office.` });
     if (!faceVerified) return res.status(400).json({ message: 'Face verification required' });
+    const faceMatch = await verifyFaceMatch(req.user._id, faceEmbedding);
+    if (!faceMatch.ok) return res.status(400).json({ message: faceMatch.message });
 
     const date = getToday();
     const attendance = await Attendance.findOne({ user: req.user._id, date });

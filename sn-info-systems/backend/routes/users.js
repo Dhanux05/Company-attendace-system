@@ -11,6 +11,7 @@ router.post('/:id/team', protect, authorize('admin'), ctrl.addUserToTeam);
 // Teams
 router.post('/teams', protect, authorize('admin'), ctrl.createTeam);
 router.get('/teams', protect, ctrl.getAllTeams);
+router.get('/my-team', protect, authorize('intern', 'teamlead', 'admin'), ctrl.getMyTeam);
 router.get('/team-members', protect, authorize('teamlead', 'admin'), ctrl.getMyTeamMembers);
 router.put('/teams/:id', protect, authorize('admin'), ctrl.updateTeam);
 router.delete('/teams/:id', protect, authorize('admin'), ctrl.deleteTeam);

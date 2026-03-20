@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import { FiAlertTriangle, FiCamera, FiCheckCircle, FiSave, FiPlayCircle } from "react-icons/fi";
+import * as faceapi from "face-api.js";
 import { useAuth } from "../../context/AuthContext";
 import { attendanceService, authService } from "../../services/api";
 import "./Pages.css";
@@ -12,6 +13,7 @@ const OFFICE = {
 };
 const OFFICE_ADDRESS = process.env.REACT_APP_OFFICE_ADDRESS || "38, Sri DV Gundappa Road, Gandhi Bazar, Basavanagudi, Bengaluru";
 const RADIUS = Number(process.env.REACT_APP_OFFICE_RADIUS || 500);
+const FACE_MATCH_THRESHOLD = Number(process.env.REACT_APP_FACE_MATCH_THRESHOLD || 0.5);
 
 function haversine(lat1, lng1, lat2, lng2) {
   const R = 6371000;
@@ -32,6 +34,8 @@ const MarkAttendance = () => {
   const [faceVerified, setFaceVerified] = useState(false);
   const [faceCapture, setFaceCapture] = useState(null);
   const [faceEmbedding, setFaceEmbedding] = useState(null);
+  const [verifiedEmbedding, setVerifiedEmbedding] = useState(null);
+  const [faceModelsReady, setFaceModelsReady] = useState(false);
   const [registering, setRegistering] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
@@ -91,10 +95,35 @@ const MarkAttendance = () => {
   });
 
   useEffect(() => {
+    loadFaceModels();
     loadTodayRecord();
     loadFaceEmbedding();
     return () => stopCamera();
   }, []);
+
+  const loadFaceModels = async () => {
+    try {
+      await Promise.all([
+        faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
+        faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
+        faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
+      ]);
+      setFaceModelsReady(true);
+    } catch (e) {
+      setFaceModelsReady(false);
+      setMessage({ type: "error", text: "Face models not loaded. Add face-api models in frontend/public/models." });
+    }
+  };
+
+  const euclideanDistance = (a = [], b = []) => {
+    if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length || a.length === 0) return Number.POSITIVE_INFINITY;
+    let sum = 0;
+    for (let i = 0; i < a.length; i++) {
+      const diff = Number(a[i]) - Number(b[i]);
+      sum += diff * diff;
+    }
+    return Math.sqrt(sum);
+  };
 
   useEffect(() => {
     if (!cameraActive || !streamRef.current) return;
@@ -216,37 +245,54 @@ const MarkAttendance = () => {
     const dataUrl = canvas.toDataURL("image/jpeg");
     setFaceCapture(dataUrl);
 
-    // Simulate face verification using pixel-based comparison
-    // In production, use face-api.js with proper models
+    if (!faceModelsReady) {
+      setFaceVerified(false);
+      setMessage({ type: "error", text: "Face models are not ready yet. Please try again." });
+      stopCamera();
+      return;
+    }
+
+    const detection = await faceapi
+      .detectSingleFace(canvas, new faceapi.TinyFaceDetectorOptions({ inputSize: 416, scoreThreshold: 0.5 }))
+      .withFaceLandmarks()
+      .withFaceDescriptor();
+
+    if (!detection?.descriptor) {
+      setFaceVerified(false);
+      setMessage({ type: "error", text: "No clear face detected. Please retake with better lighting." });
+      stopCamera();
+      return;
+    }
+
+    const liveEmbedding = Array.from(detection.descriptor);
+
     if (!user.faceRegistered) {
-      // Generate a mock embedding from the image data for demo
-      let imageData;
-      try {
-        imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      } catch (e) {
-        setMessage({ type: "error", text: "Failed to read image frame. Please retake." });
-        return;
-      }
-      const data = imageData.data;
-      const embedding = [];
-      const step = Math.max(1, Math.floor(data.length / 512));
-      for (let i = 0; i < 512; i++) {
-        embedding.push(data[i * step] / 255.0);
-      }
-      setFaceEmbedding(embedding);
+      setFaceEmbedding(liveEmbedding);
       setFaceVerified(true);
       setMessage({ type: "success", text: "Face captured for registration!" });
     } else {
-      // Compare with stored embedding
       if (faceEmbedding && faceEmbedding.length > 0) {
+        const distance = euclideanDistance(faceEmbedding, liveEmbedding);
+        const matched = Number.isFinite(distance) && distance <= FACE_MATCH_THRESHOLD;
+        if (!matched) {
+          setFaceVerified(false);
+          setVerifiedEmbedding(null);
+          setMessage({ type: "error", text: `Face mismatch (distance ${distance.toFixed(3)} > ${FACE_MATCH_THRESHOLD}).` });
+          stopCamera();
+          return;
+        }
+
         setFaceVerified(true);
-        setMessage({ type: "success", text: "Face verified successfully!" });
+        setVerifiedEmbedding(liveEmbedding);
+        setMessage({ type: "success", text: `Face verified (distance ${distance.toFixed(3)}).` });
       } else if (!user.faceRegistered) {
+        setFaceVerified(false);
         setMessage({ type: "warning", text: "Please register your face first." });
       } else {
-        // For demo: allow verification if face is registered
-        setFaceVerified(true);
-        setMessage({ type: "success", text: "Face verified!" });
+        setFaceVerified(false);
+        setMessage({ type: "warning", text: "No registered face embedding found. Please register again." });
+        stopCamera();
+        return;
       }
 
       const action = forcedAction || getPendingAttendanceAction();
@@ -256,6 +302,7 @@ const MarkAttendance = () => {
         const verifiedLoc = verificationLocationRef.current;
         await handleMarkAttendance(action, {
           skipFaceCheck: true,
+          faceEmbedding: liveEmbedding,
           locationOverride: verifiedLoc ? { lat: verifiedLoc.lat, lng: verifiedLoc.lng } : null,
           distanceOverride: verifiedLoc?.distance,
         });
@@ -284,15 +331,26 @@ const MarkAttendance = () => {
     if (!currentLocation) { setMessage({ type: "error", text: "Get your location first" }); return; }
     if (currentDistance > RADIUS) { setMessage({ type: "error", text: `Too far from office (${currentDistance}m away)` }); return; }
     if (!options.skipFaceCheck && !faceVerified) { setMessage({ type: "error", text: "Verify your face first" }); return; }
+    const liveEmbedding = options.faceEmbedding || verifiedEmbedding;
+    if (!Array.isArray(liveEmbedding) || liveEmbedding.length === 0) {
+      setMessage({ type: "error", text: "Face descriptor missing. Verify your face again." });
+      return;
+    }
 
     setLoading(true);
     try {
       const fn = type === "login" ? attendanceService.markLogin : attendanceService.markLogout;
-      const { data } = await fn({ lat: currentLocation.lat, lng: currentLocation.lng, faceVerified: true });
+      const { data } = await fn({
+        lat: currentLocation.lat,
+        lng: currentLocation.lng,
+        faceVerified: true,
+        faceEmbedding: liveEmbedding,
+      });
       setMessage({ type: "success", text: data.message });
       await loadTodayRecord();
       setFaceVerified(false);
       setFaceCapture(null);
+      setVerifiedEmbedding(null);
       verificationLocationRef.current = null;
     } catch (e) {
       setMessage({ type: "error", text: e.response?.data?.message || "Failed to mark attendance" });
@@ -321,6 +379,7 @@ const MarkAttendance = () => {
     verificationLocationRef.current = { ...liveLocation, action };
     setFaceCapture(null);
     setFaceVerified(false);
+    setVerifiedEmbedding(null);
     setMessage({ type: "warning", text: `Opening camera to auto-verify face for ${action}...` });
     await startCamera();
   };

@@ -39,6 +39,7 @@ const navConfig = {
   intern: [
     { to: "/intern/dashboard", label: "Dashboard", icon: ICONS.dashboard },
     { to: "/intern/attendance", label: "Mark Attendance", icon: ICONS.attendance },
+    { to: "/intern/team", label: "Team", icon: ICONS.teams },
     { to: "/intern/leave", label: "Apply Leave", icon: ICONS.leave },
     { to: "/intern/attendance-history", label: "My Attendance", icon: ICONS.history },
     { to: "/intern/leave-history", label: "My Leaves", icon: ICONS.approve },
@@ -47,6 +48,7 @@ const navConfig = {
   teamlead: [
     { to: "/intern/dashboard", label: "My Dashboard", icon: ICONS.dashboard },
     { to: "/intern/attendance", label: "Mark Attendance", icon: ICONS.attendance },
+    { to: "/teamlead/team", label: "Team", icon: ICONS.teams },
     { to: "/teamlead/members", label: "Team Members", icon: ICONS.team },
     { to: "/teamlead/attendance", label: "Team Attendance", icon: ICONS.team },
     { to: "/teamlead/leaves", label: "Leave Approvals", icon: ICONS.approve },

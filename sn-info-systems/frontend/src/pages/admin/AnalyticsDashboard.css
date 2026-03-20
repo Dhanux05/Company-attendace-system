@@ -52,6 +52,17 @@
   grid-column: span 2;
 }
 
+.summary-chart-shell {
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-radius: 14px;
+  padding: 12px 10px 8px;
+  background:
+    radial-gradient(120% 140% at 10% 0%, rgba(56, 189, 248, 0.1) 0%, rgba(56, 189, 248, 0) 48%),
+    radial-gradient(120% 140% at 100% 100%, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0) 55%),
+    rgba(10, 20, 40, 0.72);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
 .donut-wrap {
   display: grid;
   grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);

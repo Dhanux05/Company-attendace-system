@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { FiUsers, FiBriefcase, FiClipboard, FiCheckCircle, FiClock, FiUser, FiMapPin } from "react-icons/fi";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, LabelList, AreaChart, Area } from "recharts";
 import { userService, attendanceService, leaveService } from "../../services/api";
 import "../intern/Pages.css";
 import "./AnalyticsDashboard.css";
@@ -173,41 +173,23 @@ const AdminDashboard = () => {
         <section className="analytics-panel panel-donut">
           <div className="panel-head">
             <h2 className="analytics-section-title">Leave Distribution</h2>
-            <span className="panel-badge">Pie Graph</span>
+            <span className="panel-badge">Trend View</span>
           </div>
-          <div className="donut-wrap">
-            <div className="donut-chart-shell">
-              <ResponsiveContainer width="100%" height={250}>
-                <PieChart>
-                  <Pie
-                    data={leaveData}
-                    dataKey="value"
-                    nameKey="name"
-                    innerRadius={58}
-                    outerRadius={90}
-                    paddingAngle={2}
-                    label={renderSliceLabel}
-                    labelLine={false}
-                  >
-                    {leaveData.map((item) => (
-                      <Cell key={item.name} fill={item.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip contentStyle={TOOLTIP_STYLE} labelStyle={TOOLTIP_LABEL_STYLE} itemStyle={TOOLTIP_ITEM_STYLE} />
-                </PieChart>
-              </ResponsiveContainer>
-              <CustomDonutCenter title="Leaves" value={leaveTotal} />
-            </div>
-            <div className="donut-legend-list">
-              {leaveData.map((item) => (
-                <div key={item.name} className="legend-row">
-                  <span className="legend-dot" style={{ background: item.color }} />
-                  <span className="legend-name">{item.name}</span>
-                  <span className="legend-value">{item.value}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <ResponsiveContainer width="100%" height={250}>
+            <AreaChart data={leaveData} margin={{ left: 6, right: 12, top: 8, bottom: 0 }}>
+              <defs>
+                <linearGradient id="leaveDistFillAdmin" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#22d3ee" stopOpacity={0.4} />
+                  <stop offset="100%" stopColor="#22d3ee" stopOpacity={0.04} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 5" stroke="rgba(148, 163, 184, 0.24)" />
+              <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#9fb4d5" }} />
+              <YAxis tick={{ fontSize: 11, fill: "#9fb4d5" }} allowDecimals={false} />
+              <Tooltip contentStyle={TOOLTIP_STYLE} labelStyle={TOOLTIP_LABEL_STYLE} itemStyle={TOOLTIP_ITEM_STYLE} />
+              <Area type="monotone" dataKey="value" name="Leaves" stroke="#22d3ee" fill="url(#leaveDistFillAdmin)" strokeWidth={2.3} />
+            </AreaChart>
+          </ResponsiveContainer>
         </section>
 
         <section className="analytics-panel panel-summary">
@@ -215,27 +197,21 @@ const AdminDashboard = () => {
             <h2 className="analytics-section-title">Leave Summary</h2>
             <span className="panel-badge">Bar Graph</span>
           </div>
-          <div className="summary-bars">
-            {leaveData.map((item) => {
-              const pct = leaveTotal ? Math.round((item.value / leaveTotal) * 100) : 0;
-              return (
-                <div key={item.name} className="summary-row">
-                  <div className="summary-row-top">
-                    <div className="summary-title-wrap">
-                      <span className="legend-dot" style={{ background: item.color }} />
-                      <span className="summary-title">{item.name}</span>
-                    </div>
-                    <div className="summary-metrics">
-                      <span className="summary-count">{item.value}</span>
-                      <span className="summary-pct">{pct}%</span>
-                    </div>
-                  </div>
-                  <div className="summary-track">
-                    <div className="summary-fill" style={{ width: `${pct}%`, background: item.color }} />
-                  </div>
-                </div>
-              );
-            })}
+          <div className="summary-chart-shell">
+            <ResponsiveContainer width="100%" height={280}>
+              <BarChart data={leaveData} margin={{ top: 16, right: 10, left: -8, bottom: 4 }}>
+                <CartesianGrid strokeDasharray="2 4" stroke="rgba(148,163,184,0.22)" vertical={false} />
+                <XAxis dataKey="name" tick={{ fill: "#cfe1ff", fontSize: 12, fontWeight: 700 }} axisLine={{ stroke: "rgba(148,163,184,0.35)" }} tickLine={false} tickMargin={8} />
+                <YAxis allowDecimals={false} tick={{ fill: "#9fb4d5", fontSize: 11, fontWeight: 700 }} axisLine={{ stroke: "rgba(148,163,184,0.35)" }} tickLine={false} />
+                <Tooltip cursor={{ fill: "rgba(59,130,246,0.08)" }} contentStyle={TOOLTIP_STYLE} labelStyle={TOOLTIP_LABEL_STYLE} itemStyle={TOOLTIP_ITEM_STYLE} />
+                <Bar dataKey="value" radius={[12, 12, 0, 0]} maxBarSize={96}>
+                  <LabelList dataKey="value" position="top" fill="#f8fafc" fontSize={12} fontWeight={800} />
+                  {leaveData.map((item) => (
+                    <Cell key={`bar-${item.name}`} fill={item.color} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </section>
       </div>

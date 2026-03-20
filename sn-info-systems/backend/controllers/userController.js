@@ -1,6 +1,17 @@
 const User = require('../models/User');
 const Team = require('../models/Team');
 
+const resolveCurrentTeam = async (userId) => {
+  const me = await User.findById(userId).select('role team');
+  if (!me) return null;
+
+  const fallbackTeam = me.role === 'teamlead'
+    ? await Team.findOne({ leader: userId, isActive: true }).select('_id')
+    : null;
+
+  return me.team || fallbackTeam?._id || null;
+};
+
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find().select('-password -faceEmbedding').populate('team', 'name');
@@ -88,11 +99,7 @@ exports.getAllTeams = async (req, res) => {
 
 exports.getMyTeamMembers = async (req, res) => {
   try {
-    const me = await User.findById(req.user._id).select('role team');
-    if (!me) return res.status(404).json({ message: 'User not found' });
-
-    const fallbackTeam = await Team.findOne({ leader: req.user._id, isActive: true }).select('_id');
-    const teamId = me.team || fallbackTeam?._id;
+    const teamId = await resolveCurrentTeam(req.user._id);
     if (!teamId) return res.status(400).json({ message: 'No team assigned to this team leader' });
 
     const members = await User.find({
@@ -104,6 +111,30 @@ exports.getMyTeamMembers = async (req, res) => {
       .sort({ name: 1 });
 
     res.json(members);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.getMyTeam = async (req, res) => {
+  try {
+    const teamId = await resolveCurrentTeam(req.user._id);
+    if (!teamId) return res.status(404).json({ message: 'No team assigned' });
+
+    const team = await Team.findById(teamId)
+      .populate('leader', 'name email role phone')
+      .populate({
+        path: 'members',
+        select: 'name email role phone isActive',
+        match: { isActive: true },
+        options: { sort: { name: 1 } },
+      });
+
+    if (!team || !team.isActive) {
+      return res.status(404).json({ message: 'Team not found' });
+    }
+
+    res.json(team);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

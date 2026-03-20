@@ -289,41 +289,23 @@ const AnalyticsDashboard = () => {
         <section className="analytics-panel panel-donut">
           <div className="panel-head">
             <h2 className="analytics-section-title">Leave Distribution</h2>
-            <span className="panel-badge">Pie Graph</span>
+            <span className="panel-badge">Trend View</span>
           </div>
-          <div className="donut-wrap">
-            <div className="donut-chart-shell">
-              <ResponsiveContainer width="100%" height={250}>
-                <PieChart>
-                  <Pie
-                    data={leaveData}
-                    dataKey="value"
-                    nameKey="name"
-                    innerRadius={58}
-                    outerRadius={90}
-                    paddingAngle={2}
-                    label={renderSliceLabel}
-                    labelLine={false}
-                  >
-                    {leaveData.map((item) => (
-                      <Cell key={item.name} fill={item.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip contentStyle={TOOLTIP_STYLE} labelStyle={TOOLTIP_LABEL_STYLE} itemStyle={TOOLTIP_ITEM_STYLE} />
-                </PieChart>
-              </ResponsiveContainer>
-              <CustomDonutCenter title="Leaves" value={leaveTotal} />
-            </div>
-            <div className="donut-legend-list">
-              {leaveData.map((item) => (
-                <div key={item.name} className="legend-row">
-                  <span className="legend-dot" style={{ background: item.color }} />
-                  <span className="legend-name">{item.name}</span>
-                  <span className="legend-value">{item.value}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <ResponsiveContainer width="100%" height={250}>
+            <AreaChart data={leaveData} margin={{ left: 6, right: 12, top: 8, bottom: 0 }}>
+              <defs>
+                <linearGradient id="leaveDistFillAnalytics" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#22d3ee" stopOpacity={0.4} />
+                  <stop offset="100%" stopColor="#22d3ee" stopOpacity={0.04} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 5" stroke="rgba(148, 163, 184, 0.24)" />
+              <XAxis dataKey="name" tick={AXIS_TICK} />
+              <YAxis tick={AXIS_TICK} allowDecimals={false} />
+              <Tooltip contentStyle={TOOLTIP_STYLE} labelStyle={TOOLTIP_LABEL_STYLE} itemStyle={TOOLTIP_ITEM_STYLE} />
+              <Area type="monotone" dataKey="value" name="Leaves" stroke="#22d3ee" fill="url(#leaveDistFillAnalytics)" strokeWidth={2.3} />
+            </AreaChart>
+          </ResponsiveContainer>
         </section>
 
         <section className="analytics-panel panel-summary">

@@ -146,6 +146,7 @@ export const leaveService = {
 
 export const userService = {
   getAll: () => dedupedGet("/users"),
+  getMyTeam: () => dedupedGet("/users/my-team"),
   getTeamMembers: () => dedupedGet("/users/team-members"),
   update: (id, data) => API.put(`/users/${id}`, data),
   delete: (id) => API.delete(`/users/${id}`),
@@ -158,6 +159,8 @@ export const userService = {
 
 export const notificationService = {
   getMy: (params) => dedupedGet("/notifications/my", { params }),
+  getTeamAnnouncements: (params) => dedupedGet("/notifications/team-announcements", { params }),
+  createTeamAnnouncement: (data) => API.post("/notifications/team-announcements", data),
   markRead: (id) => API.patch(`/notifications/${id}/read`),
   markAllRead: () => API.patch("/notifications/read-all"),
 };

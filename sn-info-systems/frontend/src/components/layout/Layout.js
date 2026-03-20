@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
+import FloatingClock from "./FloatingClock";
 import "./Layout.css";
 
 const Layout = () => {
@@ -38,6 +39,7 @@ const Layout = () => {
         <main className="layout-content">
           <Outlet />
         </main>
+        <FloatingClock />
       </div>
     </div>
   );

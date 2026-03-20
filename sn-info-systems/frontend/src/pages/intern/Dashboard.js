@@ -10,6 +10,8 @@ import {
   FiFileText,
   FiArrowRight,
   FiUsers,
+  FiXCircle,
+  FiBarChart2,
 } from "react-icons/fi";
 import {
   ResponsiveContainer,
@@ -59,6 +61,8 @@ const renderSliceLabel = ({ name, value, x, y, percent }) => {
 const InternDashboard = () => {
   const { user } = useAuth();
   const [todayRecord, setTodayRecord] = useState(null);
+  const [attendanceHistory, setAttendanceHistory] = useState([]);
+  const [leaveHistory, setLeaveHistory] = useState([]);
   const [recentAttendance, setRecentAttendance] = useState([]);
   const [recentLeaves, setRecentLeaves] = useState([]);
   const [teamAnalytics, setTeamAnalytics] = useState(null);
@@ -75,6 +79,8 @@ const InternDashboard = () => {
           analyticsRequest,
         ]);
         setTodayRecord(today.data);
+        setAttendanceHistory(history.data);
+        setLeaveHistory(leaves.data);
         setRecentAttendance(history.data.slice(0, 5));
         setRecentLeaves(leaves.data.slice(0, 3));
         setTeamAnalytics(analytics.data || null);
@@ -100,6 +106,44 @@ const InternDashboard = () => {
 
   const totalStatus = statusData.reduce((sum, item) => sum + item.value, 0);
   const hasTrendData = Array.isArray(teamAnalytics?.daily) && teamAnalytics.daily.length > 0;
+  const attendedDays = attendanceHistory.filter((record) => ["Present", "Late", "Half Day"].includes(record.status)).length;
+  const totalTrackedDays = attendanceHistory.length;
+  const missedDays = Math.max(totalTrackedDays - attendedDays, 0);
+  const attendanceRate = totalTrackedDays ? `${Math.round((attendedDays / totalTrackedDays) * 100)}%` : "0%";
+  const leaveBreakdown = leaveHistory.reduce(
+    (acc, leave) => {
+      const normalizedStatus = String(leave.status || "").toLowerCase();
+      if (normalizedStatus.includes("approve")) {
+        acc.approved += 1;
+        acc.approvedDays += Number(leave.totalDays) || 0;
+      } else if (normalizedStatus.includes("reject")) {
+        acc.rejected += 1;
+      } else {
+        acc.pending += 1;
+      }
+      acc.total += 1;
+      return acc;
+    },
+    { total: 0, approved: 0, pending: 0, rejected: 0, approvedDays: 0 }
+  );
+  const personalTrendData = [...attendanceHistory]
+    .sort((a, b) => new Date(a.date) - new Date(b.date))
+    .slice(-14)
+    .map((record) => {
+      const attended = ["Present", "Late", "Half Day"].includes(record.status) ? 1 : 0;
+      return {
+        date: String(record.date || "").slice(5),
+        attended,
+        hours: Number(record.totalHours || 0),
+      };
+    });
+  const hasPersonalTrendData = personalTrendData.length > 0;
+  const leavePieData = [
+    { name: "Approved", value: leaveBreakdown.approved, color: "#10b981" },
+    { name: "Pending", value: leaveBreakdown.pending, color: "#f59e0b" },
+    { name: "Rejected", value: leaveBreakdown.rejected, color: "#ef4444" },
+  ];
+  const totalLeaveItems = leavePieData.reduce((sum, item) => sum + item.value, 0);
 
   if (loading) return <div className="page-loading">Loading...</div>;
 
@@ -262,6 +306,122 @@ const InternDashboard = () => {
           </div>
         </>
       )}
+
+      <div className="dash-section" style={{ marginBottom: 24 }}>
+        <div className="section-header">
+          <h2>My Analytics</h2>
+        </div>
+        <div className="stats-grid" style={{ marginBottom: 16 }}>
+          {[
+            { label: "Days Attended", value: attendedDays, icon: FiCheckCircle },
+            { label: "Days Missed", value: missedDays, icon: FiXCircle },
+            { label: "Attendance Rate", value: attendanceRate, icon: FiBarChart2 },
+            { label: "Leave Requests", value: leaveBreakdown.total, icon: FiFileText },
+          ].map((item) => (
+            <div key={item.label} className="today-card info-card">
+              <div className="today-icon"><item.icon /></div>
+              <div>
+                <div className="today-value">{item.value}</div>
+                <div className="today-label">{item.label}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="stats-grid" style={{ marginBottom: 0 }}>
+          {[
+            { label: "Approved Leaves", value: leaveBreakdown.approved },
+            { label: "Pending Leaves", value: leaveBreakdown.pending },
+            { label: "Rejected Leaves", value: leaveBreakdown.rejected },
+            { label: "Leave Days Approved", value: leaveBreakdown.approvedDays },
+          ].map((item) => (
+            <div key={item.label} className="today-card info-card">
+              <div>
+                <div className="today-value">{item.value}</div>
+                <div className="today-label">{item.label}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="analytics-panels" style={{ marginTop: 20 }}>
+          <section className="analytics-panel panel-trend">
+            <div className="panel-head">
+              <h2 className="analytics-section-title">Attendance Trend</h2>
+              <span className="panel-badge">Last 14 Records</span>
+            </div>
+            {!hasPersonalTrendData ? (
+              <div className="empty-state" style={{ minHeight: 120, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                No attendance data yet
+              </div>
+            ) : (
+              <ResponsiveContainer width="100%" height={220}>
+                <AreaChart data={personalTrendData} margin={{ left: 6, right: 12, top: 8, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="internAttendFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#10b981" stopOpacity={0.42} />
+                      <stop offset="100%" stopColor="#10b981" stopOpacity={0.06} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 5" stroke="rgba(148, 163, 184, 0.24)" />
+                  <XAxis dataKey="date" tick={AXIS_TICK} />
+                  <YAxis tick={AXIS_TICK} domain={[0, 1]} allowDecimals={false} />
+                  <Tooltip contentStyle={TOOLTIP_STYLE} labelStyle={TOOLTIP_LABEL_STYLE} itemStyle={TOOLTIP_ITEM_STYLE} />
+                  <Area type="monotone" dataKey="attended" name="Attended (1=yes)" stroke="#10b981" fill="url(#internAttendFill)" strokeWidth={2.2} />
+                </AreaChart>
+              </ResponsiveContainer>
+            )}
+          </section>
+
+          <section className="analytics-panel">
+            <div className="panel-head">
+              <h2 className="analytics-section-title">Leave Status Breakdown</h2>
+              <span className="panel-badge">Pie Chart</span>
+            </div>
+            <div className="donut-wrap">
+              <div className="donut-chart-shell">
+                {totalLeaveItems > 0 ? (
+                  <ResponsiveContainer width="100%" height={220}>
+                    <PieChart>
+                      <Pie
+                        data={leavePieData}
+                        dataKey="value"
+                        nameKey="name"
+                        innerRadius={62}
+                        outerRadius={95}
+                        paddingAngle={2}
+                        label={renderSliceLabel}
+                        labelLine={false}
+                      >
+                        {leavePieData.map((item) => (
+                          <Cell key={item.name} fill={item.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip contentStyle={TOOLTIP_STYLE} labelStyle={TOOLTIP_LABEL_STYLE} itemStyle={TOOLTIP_ITEM_STYLE} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="empty-state" style={{ minHeight: 120, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    No leave data yet
+                  </div>
+                )}
+                <div className="donut-center">
+                  <div className="donut-center-value">{totalLeaveItems}</div>
+                  <div className="donut-center-label">Leaves</div>
+                </div>
+              </div>
+              <div className="donut-legend-list">
+                {leavePieData.map((item) => (
+                  <div key={item.name} className="legend-row">
+                    <span className="legend-dot" style={{ background: item.color }} />
+                    <span className="legend-name">{item.name}</span>
+                    <span className="legend-value">{item.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
 
       <div className="quick-actions">
         <h2>Quick Actions</h2>

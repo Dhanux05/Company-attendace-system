@@ -6,6 +6,7 @@ import Register from "./pages/Register";
 import TwoFactorVerify from "./pages/TwoFactorVerify";
 import AccountSettings from "./pages/AccountSettings";
 import Notifications from "./pages/Notifications";
+import TeamHub from "./pages/TeamHub";
 import Layout from "./components/layout/Layout";
 import AdminPortalLayout from "./components/adminPortal/AdminPortalLayout";
 
@@ -79,6 +80,7 @@ function App() {
             <Route path="dashboard" element={<InternDashboard />} />
             <Route path="attendance" element={<MarkAttendance />} />
             <Route path="leave" element={<LeaveApplication />} />
+            <Route path="team" element={<TeamHub />} />
             <Route path="attendance-history" element={<AttendanceHistory />} />
             <Route path="leave-history" element={<LeaveHistory />} />
             <Route path="account-settings" element={<AccountSettings />} />
@@ -94,6 +96,7 @@ function App() {
               </ProtectedRoute>
             }
           >
+            <Route path="team" element={<TeamHub />} />
             <Route path="members" element={<TeamMembers />} />
             <Route path="attendance" element={<TeamAttendance />} />
             <Route path="leaves" element={<LeaveApproval />} />

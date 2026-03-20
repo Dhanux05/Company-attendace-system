@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { userService } from "../../services/api";
 import Badge from "../../components/common/Badge";
+import TeamAnnouncementPanel from "../../components/team/TeamAnnouncementPanel";
 import "../intern/Pages.css";
 
 const TeamMembers = () => {
@@ -35,6 +36,7 @@ const TeamMembers = () => {
   return (
     <div className="page">
       <div className="sub-nav sub-nav-center">
+        <NavLink to="/teamlead/team" className={({ isActive }) => `sub-nav-link ${isActive ? "active" : ""}`}>Team</NavLink>
         <NavLink to="/teamlead/members" className={({ isActive }) => `sub-nav-link ${isActive ? "active" : ""}`}>Members</NavLink>
         <NavLink to="/teamlead/attendance" className={({ isActive }) => `sub-nav-link ${isActive ? "active" : ""}`}>Attendance</NavLink>
         <NavLink to="/teamlead/leaves" className={({ isActive }) => `sub-nav-link ${isActive ? "active" : ""}`}>Leaves</NavLink>
@@ -89,6 +91,8 @@ const TeamMembers = () => {
           </div>
         )}
       </div>
+
+      <TeamAnnouncementPanel allowCompose compact />
     </div>
   );
 };
